@@ -1,7 +1,7 @@
 <template>
   <nav px6 py4 text-lg border="b base" flex="~ gap-2 items-center">
-    <div i-logos-nuxt-icon text-4xl />
-    <span text-2xl>Template</span>
+    <div i-carbon-headphones text-4xl />
+    <span text-2xl>PodwiseAI</span>
     <div flex-auto />
     <ToggleTheme />
     <NuxtLink
