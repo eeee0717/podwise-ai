@@ -1,7 +1,10 @@
 <template>
   <nav px6 py4 text-lg flex="~ gap-2 items-center">
-    <div i-carbon-headphones text-4xl />
-    <span text-2xl class="lt-md:hidden">PodwiseAI</span>
+    <NuxtLink to="/" class="flex flex-row items-center gap-2">
+      <div i-carbon-headphones text-4xl />
+      <span text-2xl class="lt-md:hidden">PodwiseAI</span>
+    </NuxtLink>
+
     <div flex-auto />
     <ToggleTheme />
     <NuxtLink
