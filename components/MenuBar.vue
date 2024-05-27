@@ -7,11 +7,11 @@ const items = ref([
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col w-40 lt-md:w-9">
     <div v-for="item, idx in items" :key="idx">
       <NuxtLink
         :to="item.to"
-        class="flex items-center justify-center rounded p2"
+        class="flex items-center justify-center rounded p2 gap-2"
         hover="bg-gray/10"
       >
         <div text-lg :class="item.icon" />
