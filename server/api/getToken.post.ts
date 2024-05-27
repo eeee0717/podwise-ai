@@ -1,12 +1,13 @@
-export default defineEventHandler(async (_) => {
+export default defineEventHandler(async (event) => {
+  const { accessToken } = await readBody(event)
   const config = useRuntimeConfig()
   const response = await $fetch('https://api.xiaoyuzhoufm.com/app_auth_tokens.refresh', {
     method: 'GET',
     headers: {
-      'x-jike-access-token': config.accessToken,
+      'x-jike-access-token': accessToken ?? config.accessToken,
       'x-jike-device-id': config.deviceId,
       'x-jike-refresh-token': config.refreshToken,
     },
-  }).then((res) => { return JSON.stringify(res) })
+  })
   return response
 })
