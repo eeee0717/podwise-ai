@@ -1,8 +1,33 @@
 <script setup lang="ts">
-const importUrl = ref('')
+import type { Episode, Podcast } from '~/types'
 
+const importUrl = ref('')
+const toast = useToast()
 async function Import() {
-  console.log(importUrl.value)
+  let data: Podcast | Episode | null = null
+
+  if (importUrl.value === '')
+    return
+  const apiUrl = ref('')
+  if (importUrl.value.match(xiaoyuzhouPodcastRegex)) {
+    apiUrl.value = '/api/getPodcast'
+    data = { url: importUrl.value } as Podcast
+  }
+  else if (importUrl.value.match(xiaoyuzhouEpisodeRegex)) {
+    apiUrl.value = '/api/getEpisode'
+    data = { url: importUrl.value } as Episode
+  }
+  else {
+    return
+  }
+  await $fetch(apiUrl.value, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then((res) => {
+    toast.add({ title: JSON.stringify(res) ?? 'Something error' })
+  }).catch((err) => {
+    toast.add({ title: JSON.stringify(err) })
+  })
 }
 </script>
 
