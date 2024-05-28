@@ -14,7 +14,7 @@ const podcastStore = usePodcastStore()
       </UButton>
     </div>
     <div>
-      {{ podcastStore.podcast?.episodes?.length }}
+      {{ podcastStore.podcast?.episodes }}
     </div>
   </div>
 </template>
