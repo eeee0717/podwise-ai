@@ -3,31 +3,66 @@ import type { Episode, Podcast } from '~/types'
 
 const importUrl = ref('')
 const toast = useToast()
+const accessToken = useLocalStorage('accessToken', '')
+const deviceId = useLocalStorage('deviceId', '')
+const freshToken = useLocalStorage('freshToken', '')
+const episode = ref<Episode | null>(null)
+const podcast = ref<Podcast | null>(null)
 async function Import() {
-  let data: Podcast | Episode | null = null
-
   if (importUrl.value === '')
     return
-  const apiUrl = ref('')
   if (importUrl.value.match(xiaoyuzhouPodcastRegex)) {
-    apiUrl.value = '/api/getPodcast'
-    data = { url: importUrl.value } as Podcast
+    await handlePodcast()
   }
   else if (importUrl.value.match(xiaoyuzhouEpisodeRegex)) {
-    apiUrl.value = '/api/getEpisode'
-    data = { url: importUrl.value } as Episode
+    await handleEpisode()
   }
-  else {
-    return
+}
+
+async function handlePodcast() {
+  await getAuthToken()
+  const data: Podcast = {
+    pid: importUrl.value.split('/').pop() ?? '',
+    appToken: {
+      accessToken: accessToken.value,
+      deviceId: deviceId.value,
+      freshToken: freshToken.value,
+    },
   }
-  await $fetch(apiUrl.value, {
+  const response = await $fetch('/api/getPodcast', {
     method: 'POST',
     body: JSON.stringify(data),
-  }).then((res) => {
-    toast.add({ title: JSON.stringify(res) ?? 'Something error' })
   }).catch((err) => {
     toast.add({ title: JSON.stringify(err) })
+    return null
   })
+  if (response === null)
+    return null
+  podcast.value = response as Podcast
+  console.log(podcast.value)
+}
+
+async function handleEpisode() {
+  await getAuthToken()
+  const data: Episode = {
+    eid: importUrl.value.split('/').pop() ?? '',
+    appToken: {
+      accessToken: accessToken.value,
+      deviceId: deviceId.value,
+      freshToken: freshToken.value,
+    },
+  }
+  const response = await $fetch('/api/getEpisode', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).catch((err) => {
+    toast.add({ title: JSON.stringify(err) })
+    return null
+  })
+  if (response === null)
+    return null
+  episode.value = response as Episode
+  console.log(episode.value)
 }
 </script>
 
