@@ -3,9 +3,9 @@ import type { Episode } from '~/types'
 async function fetchEpisode(episode: Episode) {
   const url = `https://api.xiaoyuzhoufm.com/v1/episode/get?eid=${episode.eid}`
   const headers = {
-    'x-jike-refresh-token': episode.appToken.freshToken,
-    'x-jike-device-id': episode.appToken.deviceId,
-    'x-jike-access-token': episode.appToken.accessToken,
+    'x-jike-refresh-token': episode.appToken!.freshToken,
+    'x-jike-device-id': episode.appToken!.deviceId,
+    'x-jike-access-token': episode.appToken!.accessToken,
   }
   const response = await fetch(url, { method: 'GET', headers })
   if (!response.ok) {

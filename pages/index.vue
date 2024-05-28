@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useEpisodeStore, usePodcastStore } from '~/store'
 
-const episodeStore = useEpisodeStore()
+// const episodeStore = useEpisodeStore()
 const podcastStore = usePodcastStore()
 </script>
 
@@ -9,10 +9,12 @@ const podcastStore = usePodcastStore()
   <div>
     <ImportInput />
     <div>
-      {{ episodeStore.episode?.title }}
+      <UButton @click="console.log(podcastStore.podcast)">
+        show podcast
+      </UButton>
     </div>
     <div>
-      {{ podcastStore.podcast?.title }}
+      {{ podcastStore.podcast?.episodes?.length }}
     </div>
   </div>
 </template>

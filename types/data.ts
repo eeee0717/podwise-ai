@@ -6,12 +6,13 @@ export interface Podcast {
   author?: string
   description?: string
   picUrl?: string
+  loadMoreKey?: string
   episodes?: Episode[]
 }
 
 export interface Episode {
   eid: string
-  appToken: appToken
+  appToken?: appToken
   type?: 'Episode'
   title?: string
   datePublished?: Date

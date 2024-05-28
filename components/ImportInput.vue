@@ -12,23 +12,29 @@ const podcastStore = usePodcastStore()
 async function Import() {
   if (importUrl.value === '')
     return
+  // 获取 token
+  await getAuthToken()
   if (importUrl.value.match(xiaoyuzhouPodcastRegex)) {
     await handlePodcast()
+    await handleEpisodeList()
   }
   else if (importUrl.value.match(xiaoyuzhouEpisodeRegex)) {
     await handleEpisode()
   }
 }
 
+function getAppToken() {
+  return {
+    accessToken: accessToken.value,
+    deviceId: deviceId.value,
+    freshToken: freshToken.value,
+  }
+}
+
 async function handlePodcast() {
-  await getAuthToken()
   const data: Podcast = {
     pid: importUrl.value.split('/').pop() ?? '',
-    appToken: {
-      accessToken: accessToken.value,
-      deviceId: deviceId.value,
-      freshToken: freshToken.value,
-    },
+    appToken: getAppToken(),
   }
   const response = await $fetch('/api/getPodcast', {
     method: 'POST',
@@ -39,19 +45,33 @@ async function handlePodcast() {
   })
   if (response === null)
     return null
-  podcastStore.setPodcast(response as Podcast)
-  // console.log(podcast.value)
+  podcastStore.setPodcastInfo(response as Podcast)
+  // console.log(podcastStore.podcast)
+}
+
+async function handleEpisodeList() {
+  const data: Podcast = {
+    pid: importUrl.value.split('/').pop() ?? '',
+    appToken: getAppToken(),
+  }
+  const response = await $fetch('/api/getEpisodeList', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).catch((err) => {
+    toast.add({ title: JSON.stringify(err) })
+    return null
+  })
+  if (response === null)
+    return null
+
+  podcastStore.setPodcastDetails(response as Podcast)
+  console.log(podcastStore.podcast)
 }
 
 async function handleEpisode() {
-  await getAuthToken()
   const data: Episode = {
     eid: importUrl.value.split('/').pop() ?? '',
-    appToken: {
-      accessToken: accessToken.value,
-      deviceId: deviceId.value,
-      freshToken: freshToken.value,
-    },
+    appToken: getAppToken(),
   }
   const response = await $fetch('/api/getEpisode', {
     method: 'POST',

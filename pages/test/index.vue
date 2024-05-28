@@ -2,7 +2,8 @@
 import { getAuthToken } from '~/utils/getAuthToken'
 
 async function Test() {
-  await getAuthToken()
+  // await getAuthToken()
+
 }
 </script>
 

@@ -3,10 +3,23 @@ import type { Episode, Podcast } from '~/types'
 
 export const usePodcastStore = defineStore('podcast', () => {
   const podcast = ref<Podcast | null>(null)
-  function setPodcast(value: Podcast) {
-    podcast.value = value
+  function setPodcastDetails(value: Podcast) {
+    if (!podcast.value)
+      podcast.value = {} as Podcast
+    podcast.value.loadMoreKey = value.loadMoreKey
+    podcast.value.episodes = value.episodes
   }
-  return { podcast, setPodcast }
+  function setPodcastInfo(value: Podcast) {
+    if (!podcast.value)
+      podcast.value = {} as Podcast
+    podcast.value.pid = value.pid
+    podcast.value.appToken = value.appToken
+    podcast.value.title = value.title
+    podcast.value.author = value.author
+    podcast.value.description = value.description
+    podcast.value.picUrl = value.picUrl
+  }
+  return { podcast, setPodcastInfo, setPodcastDetails }
 })
 
 export const useEpisodeStore = defineStore('episode', () => {

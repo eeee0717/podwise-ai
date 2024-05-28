@@ -9,5 +9,6 @@ export default defineEventHandler(async (event) => {
       'x-jike-refresh-token': config.refreshToken,
     },
   })
+  // console.log(response)
   return response
 })
