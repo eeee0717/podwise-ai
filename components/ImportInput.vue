@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useEpisodeStore, usePodcastStore } from '~/store'
 import type { Episode, Podcast } from '~/types'
 
 const importUrl = ref('')
@@ -6,8 +7,8 @@ const toast = useToast()
 const accessToken = useLocalStorage('accessToken', '')
 const deviceId = useLocalStorage('deviceId', '')
 const freshToken = useLocalStorage('freshToken', '')
-const episode = ref<Episode | null>(null)
-const podcast = ref<Podcast | null>(null)
+const episodeStore = useEpisodeStore()
+const podcastStore = usePodcastStore()
 async function Import() {
   if (importUrl.value === '')
     return
@@ -38,8 +39,8 @@ async function handlePodcast() {
   })
   if (response === null)
     return null
-  podcast.value = response as Podcast
-  console.log(podcast.value)
+  podcastStore.setPodcast(response as Podcast)
+  // console.log(podcast.value)
 }
 
 async function handleEpisode() {
@@ -61,8 +62,8 @@ async function handleEpisode() {
   })
   if (response === null)
     return null
-  episode.value = response as Episode
-  console.log(episode.value)
+  episodeStore.setEpisode(response as Episode)
+  // console.log(episode.value)
 }
 </script>
 

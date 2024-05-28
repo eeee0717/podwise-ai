@@ -15,7 +15,7 @@ async function fetchEpisode(episode: Episode) {
   if (!data || typeof data !== 'object') {
     throw new Error('Response data is not valid')
   }
-  return data
+  return data.data
 }
 
 export default defineEventHandler(async (event) => {

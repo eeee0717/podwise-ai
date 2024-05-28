@@ -2,7 +2,10 @@ export interface Podcast {
   pid: string
   appToken: appToken
   type?: 'Podcast'
-  name?: string
+  title?: string
+  author?: string
+  description?: string
+  picUrl?: string
   episodes?: Episode[]
 }
 
