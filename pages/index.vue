@@ -8,7 +8,7 @@ const podcastStore = usePodcastStore()
 <template>
   <div class="p2 gap-2">
     <ImportInput />
-    <div v-for="episode, idx in podcastStore.podcast?.episodes" :key="idx">
+    <div v-for="episode, idx in podcastStore.podcast?.episodes" :key="idx" class=" m-t-1 ">
       <EpisodeBoard :episode="episode" />
     </div>
   </div>
