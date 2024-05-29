@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { format } from 'date-fns'
 import type { Episode } from '~/types'
 
 const props = defineProps<{
   episode: Episode
 }>()
+
+const newDate: string = format(props.episode.datePublished as Date, 'yyyy-MM-dd')
+const duration_hours = Math.floor(props.episode.duration as number / 3600)
+const duration_minutes = Math.floor((props.episode.duration as number % 3600) / 60)
 </script>
 
 <template>
@@ -15,15 +20,16 @@ const props = defineProps<{
             <img crossorigin="anonymous" :src="props.episode.picUrl" alt="cover">
           </div>
           <div grid="~ rows-2">
-            <div class="flex flex-row">
-              <span>{{ episode.datePublished }}</span>
+            <div class="flex flex-row gap-2">
+              <span>{{ newDate }}</span>
               <div class="flex flex-row items-center">
                 <div class="i-carbon-timer" />
-                <span>{{ episode.duration }}</span>
+                <span>{{ duration_hours }}h</span>
+                <span>{{ duration_minutes }}m</span>
               </div>
             </div>
             <p>
-              {{ episode.title }}
+              {{ props.episode.title }}
             </p>
           </div>
         </div>
