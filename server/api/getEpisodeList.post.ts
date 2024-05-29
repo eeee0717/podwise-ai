@@ -39,6 +39,7 @@ export default defineEventHandler(async (event) => {
         type: 'Episode',
         title: episode.title,
         datePublished: episode.pubDate,
+        duration: episode.duration,
         description: episode.description,
         mediaUrl: episode.enclosure.url,
         picUrl: episode.image.picUrl,

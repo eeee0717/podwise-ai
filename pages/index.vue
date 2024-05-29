@@ -6,15 +6,10 @@ const podcastStore = usePodcastStore()
 </script>
 
 <template>
-  <div>
+  <div class="p2 gap-2">
     <ImportInput />
-    <div>
-      <UButton @click="console.log(podcastStore.podcast)">
-        show podcast
-      </UButton>
-    </div>
-    <div>
-      {{ podcastStore.podcast?.episodes }}
+    <div v-for="episode, idx in podcastStore.podcast?.episodes" :key="idx">
+      <EpisodeBoard :episode="episode" />
     </div>
   </div>
 </template>

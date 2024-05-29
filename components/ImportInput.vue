@@ -88,7 +88,7 @@ async function handleEpisode() {
 </script>
 
 <template>
-  <div class="w-full">
+  <div>
     <div flex="~ row" class="gap-2">
       <UInput
         v-model="importUrl"

@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
     episode.title = data.title
     episode.description = data.description
     episode.datePublished = data.pubDate
+    episode.duration = data.duration
     episode.mediaUrl = data.enclosure.url
     episode.picUrl = data.image.picUrl
     return episode
