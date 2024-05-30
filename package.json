@@ -26,6 +26,7 @@
     "@nuxt/devtools": "latest",
     "@nuxt/ui": "^2.16.0",
     "@nuxtjs/color-mode": "^3.3.2",
+    "@nuxtjs/supabase": "^1.2.2",
     "@unocss/nuxt": "^0.57.7",
     "@unocss/preset-icons": "^0.57.7",
     "@vueuse/nuxt": "^10.6.1",

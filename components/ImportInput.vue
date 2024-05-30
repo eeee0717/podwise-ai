@@ -2,7 +2,7 @@
 import { useEpisodeStore, usePodcastStore } from '~/store'
 import type { Episode, Podcast } from '~/types'
 
-const importUrl = ref('')
+const importUrl = useLocalStorage('importUrl', '')
 const toast = useToast()
 const accessToken = useLocalStorage('accessToken', '')
 const deviceId = useLocalStorage('deviceId', '')

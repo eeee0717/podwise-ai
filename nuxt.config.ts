@@ -1,10 +1,13 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+/* eslint-disable node/prefer-global/process */
 export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     accessToken: process.env.X_JIKE_ACCESS_TOKEN,
     deviceId: process.env.X_JIKE_DEVICE_ID,
     refreshToken: process.env.X_JIKE_REFRESH_TOKEN,
+    public: {
+      baseUrl: process.env.BASE_URL || 'http://localhost:3030',
+    },
   },
   modules: [
     '@vueuse/nuxt',
@@ -13,6 +16,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/ui',
     '@pinia/nuxt',
+    '@nuxtjs/supabase',
   ],
   colorMode: {
     classSuffix: '',
@@ -26,6 +30,13 @@ export default defineNuxtConfig({
           'Cross-Origin-Opener-Policy': 'same-origin',
         },
       },
+    },
+  },
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      include: ['/'],
     },
   },
 })
