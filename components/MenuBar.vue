@@ -7,7 +7,7 @@ const items = ref([
 </script>
 
 <template>
-  <div class="flex flex-col w-40 lt-md:w-9">
+  <div class=" flex flex-col w-40 lt-md:w-9">
     <div v-for="item, idx in items" :key="idx">
       <NuxtLink
         :to="item.to"

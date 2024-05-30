@@ -2,18 +2,24 @@
 import { usePodcastStore } from '~/store'
 import type { Podcast } from '~/types'
 
-const podcastStore = usePodcastStore()
 const supabase = useSupabaseClient()
+const podcastList = ref<Podcast[]>([])
+// const podcast = ref<Podcast>()
 onMounted(async () => {
   const { data, error } = await supabase.from('podcast').select('*')
-  console.log(data)
+  if (data) {
+    podcastList.value = data
+  }
+  else {
+    console.error('error', error)
+  }
 })
 </script>
 
 <template>
-  <div class="p2">
-    <div v-if="podcastStore.podcast">
-      <PodcastCard :podcast="podcastStore.podcast" />
+  <div v-if="podcastList" class="p2">
+    <div v-for="podcast, idx in podcastList" :key="idx">
+      <PodcastCard :podcast="podcast" />
     </div>
   </div>
 </template>

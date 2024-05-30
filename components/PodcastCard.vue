@@ -9,7 +9,7 @@ const props = defineProps<{
 <template>
   <div class="b b-1 border-gray:20 rounded p2 flex items-center justify-center">
     <div grid="~ cols-[1fr_min-content] gap-2" class="w-full">
-      <div grid="~ cols-[min-content_1fr] gap-2">
+      <div grid="~ cols-[min-content_1fr] gap-2" class=" flex items-center">
         <div class="w-24 h-24">
           <img crossorigin="anonymous" :src="props.podcast.picUrl" alt="cover">
         </div>
