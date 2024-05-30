@@ -32,10 +32,11 @@ function getAppToken() {
 }
 
 async function handlePodcast() {
-  const data: Podcast = {
+  const data = {
     pid: importUrl.value.split('/').pop() ?? '',
     appToken: getAppToken(),
   }
+
   const response = await $fetch('/api/getPodcast', {
     method: 'POST',
     body: JSON.stringify(data),
@@ -46,12 +47,26 @@ async function handlePodcast() {
   if (response === null)
     return null
   podcastStore.setPodcastInfo(response as Podcast)
-  // console.log(podcastStore.podcast)
+  await addPodcastToPg(response as Podcast)
+}
+
+async function addPodcastToPg(podcast: Podcast) {
+  const { data, error } = await $fetch('/api/addPodcast', {
+    method: 'POST',
+    body: JSON.stringify({
+      pid: podcast.pid,
+      title: podcast.title,
+      author: podcast.author,
+      description: podcast.description,
+      picUrl: podcast.picUrl,
+    }),
+  })
+  console.log(data, error)
 }
 
 async function handleEpisodeList() {
-  const data: Podcast = {
-    pid: importUrl.value.split('/').pop() ?? '',
+  const data = {
+    podcast: podcastStore.podcast,
     appToken: getAppToken(),
   }
   const response = await $fetch('/api/getEpisodeList', {
@@ -65,11 +80,10 @@ async function handleEpisodeList() {
     return null
 
   podcastStore.setPodcastDetails(response as Podcast)
-  console.log(podcastStore.podcast)
 }
 
 async function handleEpisode() {
-  const data: Episode = {
+  const data = {
     eid: importUrl.value.split('/').pop() ?? '',
     appToken: getAppToken(),
   }
@@ -83,7 +97,6 @@ async function handleEpisode() {
   if (response === null)
     return null
   episodeStore.setEpisode(response as Episode)
-  // console.log(episode.value)
 }
 </script>
 

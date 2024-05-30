@@ -9,16 +9,16 @@ async function Test() {
   console.log(data)
 }
 async function Add() {
-  // eslint-disable-next-line ts/ban-ts-comment
-  // @ts-expect-error
-  const { data, error } = await supabase.from('podcast').insert([
-    {
-      pid: '123',
+  const { data, error } = await $fetch('/api/addPodcast', {
+    method: 'POST',
+    body: JSON.stringify({
       title: 'test',
       description: 'test',
       picUrl: 'test',
-    },
-  ])
+      datePublished: '2022-01-01',
+      duration: 1000,
+    }),
+  })
   console.log(data)
 }
 </script>

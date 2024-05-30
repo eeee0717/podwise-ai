@@ -1,4 +1,4 @@
-import type { Podcast } from '~/types'
+import type { Podcast, appToken } from '~/types'
 
 interface Response {
   data: Array<any>
@@ -8,11 +8,11 @@ interface Response {
   total: number
 }
 
-async function fetchEpisodeList(podcast: Podcast) {
+async function fetchEpisodeList(appToken: appToken, podcast: Podcast) {
   const headers = {
-    'x-jike-refresh-token': podcast.appToken.freshToken,
-    'x-jike-device-id': podcast.appToken.deviceId,
-    'x-jike-access-token': podcast.appToken.accessToken,
+    'x-jike-refresh-token': appToken.freshToken,
+    'x-jike-device-id': appToken.deviceId,
+    'x-jike-access-token': appToken.accessToken,
   }
   let body = JSON.stringify({ pid: podcast.pid })
   if (podcast.loadMoreKey) {
@@ -30,8 +30,8 @@ async function fetchEpisodeList(podcast: Podcast) {
 
 export default defineEventHandler(async (event) => {
   try {
-    const podcast: Podcast = await readBody(event)
-    const response: Response = await fetchEpisodeList(podcast)
+    const { podcast, appToken } = await readBody(event)
+    const response: Response = await fetchEpisodeList(appToken, podcast)
     podcast.loadMoreKey = response.loadMoreKey
     podcast.episodes = response.data.map((episode) => {
       return {
@@ -45,7 +45,6 @@ export default defineEventHandler(async (event) => {
         picUrl: episode.image.picUrl,
       }
     })
-    // console.log(podcast)
     return podcast
   }
   catch (error) {

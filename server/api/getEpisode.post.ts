@@ -1,11 +1,11 @@
-import type { Episode } from '~/types'
+import type { Episode, appToken } from '~/types'
 
-async function fetchEpisode(episode: Episode) {
-  const url = `https://api.xiaoyuzhoufm.com/v1/episode/get?eid=${episode.eid}`
+async function fetchEpisode(appToken: appToken, eid: string) {
+  const url = `https://api.xiaoyuzhoufm.com/v1/episode/get?eid=${eid}`
   const headers = {
-    'x-jike-refresh-token': episode.appToken!.freshToken,
-    'x-jike-device-id': episode.appToken!.deviceId,
-    'x-jike-access-token': episode.appToken!.accessToken,
+    'x-jike-refresh-token': appToken.freshToken,
+    'x-jike-device-id': appToken.deviceId,
+    'x-jike-access-token': appToken.accessToken,
   }
   const response = await fetch(url, { method: 'GET', headers })
   if (!response.ok) {
@@ -20,14 +20,17 @@ async function fetchEpisode(episode: Episode) {
 
 export default defineEventHandler(async (event) => {
   try {
-    const episode: Episode = await readBody(event)
-    const data = await fetchEpisode(episode)
-    episode.title = data.title
-    episode.description = data.description
-    episode.datePublished = data.pubDate
-    episode.duration = data.duration
-    episode.mediaUrl = data.enclosure.url
-    episode.picUrl = data.image.picUrl
+    const { appToken, eid } = await readBody(event)
+    const data = await fetchEpisode(appToken, eid)
+    const episode: Episode = {
+      eid,
+      title: data.title,
+      description: data.description,
+      datePublished: data.pubDate,
+      duration: data.duration,
+      mediaUrl: data.enclosure.url,
+      picUrl: data.image.picUrl,
+    }
     return episode
   }
   catch (error) {

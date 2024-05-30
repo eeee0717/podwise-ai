@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { usePodcastStore } from '~/store'
+import type { Podcast } from '~/types'
 
 const podcastStore = usePodcastStore()
+const supabase = useSupabaseClient()
+onMounted(async () => {
+  const { data, error } = await supabase.from('podcast').select('*')
+  console.log(data)
+})
 </script>
 
 <template>

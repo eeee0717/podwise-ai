@@ -1,7 +1,5 @@
 export interface Podcast {
   pid: string
-  appToken: appToken
-  type?: 'Podcast'
   title?: string
   author?: string
   description?: string
@@ -12,8 +10,6 @@ export interface Podcast {
 
 export interface Episode {
   eid: string
-  appToken?: appToken
-  type?: 'Episode'
   title?: string
   datePublished?: Date
   duration?: number

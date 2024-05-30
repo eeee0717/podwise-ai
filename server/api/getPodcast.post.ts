@@ -1,12 +1,12 @@
-import type { Podcast } from '~/types'
+import type { Podcast, appToken } from '~/types'
 
-async function fetchPodcast(podcast: Podcast) {
+async function fetchPodcast(appToken: appToken, pid: string) {
   const headers = {
-    'x-jike-refresh-token': podcast.appToken.freshToken,
-    'x-jike-device-id': podcast.appToken.deviceId,
-    'x-jike-access-token': podcast.appToken.accessToken,
+    'x-jike-refresh-token': appToken.freshToken,
+    'x-jike-device-id': appToken.deviceId,
+    'x-jike-access-token': appToken.accessToken,
   }
-  const url = `https://api.xiaoyuzhoufm.com/v1/podcast/get?pid=${podcast.pid}`
+  const url = `https://api.xiaoyuzhoufm.com/v1/podcast/get?pid=${pid}`
   const response = await fetch(url, { method: 'GET', headers })
   if (!response.ok) {
     throw new Error(`Network response was not ok: ${response.statusText}`)
@@ -20,12 +20,15 @@ async function fetchPodcast(podcast: Podcast) {
 
 export default defineEventHandler(async (event) => {
   try {
-    const podcast: Podcast = await readBody(event)
-    const data = await fetchPodcast(podcast)
-    podcast.title = data.title
-    podcast.author = data.author
-    podcast.description = data.description
-    podcast.picUrl = data.image.picUrl
+    const { appToken, pid } = await readBody(event)
+    const data = await fetchPodcast(appToken, pid)
+    const podcast: Podcast = {
+      pid,
+      title: data.title,
+      author: data.author,
+      description: data.description,
+      picUrl: data.image.picUrl,
+    }
     return podcast
   }
   catch (error) {
