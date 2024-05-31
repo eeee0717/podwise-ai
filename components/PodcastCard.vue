@@ -4,6 +4,7 @@ import type { Podcast } from '~/types'
 const props = defineProps<{
   podcast: Podcast
 }>()
+const route = useRoute()
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const props = defineProps<{
         </div>
       </div>
       <div class="flex items-center">
-        <UButton size="lg" variant="ghost" color="white" icon="i-carbon-information">
+        <UButton size="lg" variant="ghost" color="white" icon="i-carbon-information" :to="`${route.fullPath}/${props.podcast.pid}`">
           play
         </UButton>
       </div>
