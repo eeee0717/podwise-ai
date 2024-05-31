@@ -5,7 +5,7 @@ export interface Podcast {
   description?: string
   picUrl?: string
   loadMoreKey?: string
-  episodes?: Episode[]
+  episods?: Episode[]
 }
 
 export interface Episode {

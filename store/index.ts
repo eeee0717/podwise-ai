@@ -7,13 +7,12 @@ export const usePodcastStore = defineStore('podcast', () => {
     if (!podcast.value)
       podcast.value = {} as Podcast
     podcast.value.loadMoreKey = value.loadMoreKey
-    podcast.value.episodes = value.episodes
+    podcast.value.episods = value.episods
   }
   function setPodcastInfo(value: Podcast) {
     if (!podcast.value)
       podcast.value = {} as Podcast
     podcast.value.pid = value.pid
-    podcast.value.appToken = value.appToken
     podcast.value.title = value.title
     podcast.value.author = value.author
     podcast.value.description = value.description

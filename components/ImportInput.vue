@@ -51,7 +51,7 @@ async function handlePodcast() {
 }
 
 async function addPodcastToPg(podcast: Podcast) {
-  const { data, error } = await $fetch('/api/addPodcast', {
+  const { data, msg } = await $fetch('/api/addPodcast', {
     method: 'POST',
     body: JSON.stringify({
       pid: podcast.pid,
@@ -61,7 +61,7 @@ async function addPodcastToPg(podcast: Podcast) {
       picUrl: podcast.picUrl,
     }),
   })
-  console.log(data, error)
+  console.log(data, msg)
 }
 
 async function handleEpisodeList() {
@@ -80,6 +80,18 @@ async function handleEpisodeList() {
     return null
 
   podcastStore.setPodcastDetails(response as Podcast)
+  await addEpisodsToPg(response as Podcast)
+}
+
+async function addEpisodsToPg(podcast: Podcast) {
+  const { data, msg } = await $fetch('/api/addEpisods', {
+    method: 'POST',
+    body: JSON.stringify({
+      pid: podcast.pid,
+      episods: podcast.episods,
+    }),
+  })
+  console.log(data, msg)
 }
 
 async function handleEpisode() {

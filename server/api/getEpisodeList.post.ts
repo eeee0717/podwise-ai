@@ -14,10 +14,10 @@ async function fetchEpisodeList(appToken: appToken, podcast: Podcast) {
     'x-jike-device-id': appToken.deviceId,
     'x-jike-access-token': appToken.accessToken,
   }
-  let body = JSON.stringify({ pid: podcast.pid })
-  if (podcast.loadMoreKey) {
-    body = JSON.stringify({ pid: podcast.pid, loadMoreKey: podcast.loadMoreKey })
-  }
+  const body = JSON.stringify({ pid: podcast.pid })
+  // if (podcast.loadMoreKey) {
+  //   body = JSON.stringify({ pid: podcast.pid, loadMoreKey: podcast.loadMoreKey })
+  // }
   const url = 'https://api.xiaoyuzhoufm.com/v1/episode/list'
   const response: Response = await $fetch(url, {
     method: 'POST',
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     const { podcast, appToken } = await readBody(event)
     const response: Response = await fetchEpisodeList(appToken, podcast)
     podcast.loadMoreKey = response.loadMoreKey
-    podcast.episodes = response.data.map((episode) => {
+    podcast.episods = response.data.map((episode) => {
       return {
         eid: episode.eid,
         type: 'Episode',
