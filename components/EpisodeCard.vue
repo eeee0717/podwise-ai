@@ -33,7 +33,7 @@ const duration_minutes = Math.floor((props.episode.duration as number % 3600) / 
             </p>
           </div>
         </div>
-        <div class="clamped-text text-gray:80 text-sm">
+        <div class="clamped-text text-gray:40 text-sm ">
           {{ props.episode.description }}
         </div>
       </div>
