@@ -33,12 +33,12 @@ const duration_minutes = computed(() => {
                 <span>{{ duration_minutes }}m</span>
               </div>
             </div>
-            <p>
+            <p class="clamped-title">
               {{ props.episode.title }}
             </p>
           </div>
         </div>
-        <div class="clamped-text text-gray:40 text-sm ">
+        <div class="clamped-description text-gray:40 text-sm ">
           {{ props.episode.description }}
         </div>
       </div>
@@ -52,7 +52,7 @@ const duration_minutes = computed(() => {
 </template>
 
 <style scoped>
-  .clamped-text {
+  .clamped-description {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; /* 限制显示的行数 */
@@ -60,5 +60,14 @@ const duration_minutes = computed(() => {
     text-overflow: ellipsis;
     line-height: 1.5; /* 根据需要调整行高 */
     max-height: calc(1.5em * 2); /* 行高乘以显示的行数 */
+  }
+  .clamped-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* 限制显示的行数 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5; /* 根据需要调整行高 */
+    max-height: calc(1.5em * 1); /* 行高乘以显示的行数 */
   }
 </style>
