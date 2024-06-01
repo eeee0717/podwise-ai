@@ -19,7 +19,7 @@ onMounted(async () => {
 <template>
   <div>
     <div class="relative flex flex-col items-center gap-y-4  p-6 pb-9 bg-gradient-to-br from-cyan-800/10 to-violet-800/10 dark:from-cyan-950 dark:to-violet-950 lg:flex-row lg:gap-x-6">
-      <img :src="podcast?.picUrl" class="rounded-md w-44 h-44 shadow">
+      <img :src="podcast?.picUrl" crossorigin="anonymous" class="rounded-md w-44 h-44 shadow">
       <div class="flex flex-col items-center gap-y-2 lg:items-start">
         <h1 class="text-lg font-semibold line-clamp-2 sm:text-xl lg:text-2xl">
           {{ podcast?.title }}

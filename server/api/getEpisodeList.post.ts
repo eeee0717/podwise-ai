@@ -31,8 +31,11 @@ async function fetchEpisodeList(appToken: appToken, podcast: Podcast) {
 export default defineEventHandler(async (event) => {
   try {
     const { podcast, appToken } = await readBody(event)
+    if (!podcast.episods) {
+      podcast.episods = []
+    }
     let episods = []
-    do {
+    while (podcast.episods.length < podcast.episodeCount) {
       const response: Response = await fetchEpisodeList(appToken, podcast)
       podcast.loadMoreKey = response.loadMoreKey
       episods = response.data.map((episode) => {
@@ -43,11 +46,12 @@ export default defineEventHandler(async (event) => {
           duration: episode.duration,
           description: episode.description,
           mediaUrl: episode.enclosure.url,
-          picUrl: episode.image.picUrl,
+          picUrl: episode.image?.picUrl || podcast.picUrl,
         }
       })
       podcast.episods = podcast.episods ? podcast.episods.concat(episods) : episods
-    } while (podcast.episods.length < podcast.episodeCount)
+    }
+    podcast.loadMoreKey = null
     return podcast
   }
   catch (error) {

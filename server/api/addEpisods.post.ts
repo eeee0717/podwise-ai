@@ -5,7 +5,15 @@ export default defineEventHandler(async (event) => {
   try {
     const supabase = await serverSupabaseClient(event)
     const { pid, episods } = await readBody(event)
-    const insertData: Episode[] = episods.map((episode: Episode) => {
+    // 查询数据库中是否存在episode
+    const { data: episodeData } = await supabase.from('episods').select('*').eq('pid', pid)
+    let existEids: string[] = []
+    if (episodeData && episodeData.length > 0) {
+      existEids = episodeData.map((episode: Episode) => episode.eid)
+    }
+    // 过滤掉已存在的episode
+    const episodsFiltered = episods.filter((episode: Episode) => !existEids.includes(episode.eid))
+    const insertData: Episode[] = episodsFiltered.map((episode: Episode) => {
       return {
         pid,
         eid: episode.eid,
