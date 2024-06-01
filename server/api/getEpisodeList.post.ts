@@ -14,10 +14,10 @@ async function fetchEpisodeList(appToken: appToken, podcast: Podcast) {
     'x-jike-device-id': appToken.deviceId,
     'x-jike-access-token': appToken.accessToken,
   }
-  const body = JSON.stringify({ pid: podcast.pid })
-  // if (podcast.loadMoreKey) {
-  //   body = JSON.stringify({ pid: podcast.pid, loadMoreKey: podcast.loadMoreKey })
-  // }
+  let body = JSON.stringify({ pid: podcast.pid })
+  if (podcast.loadMoreKey) {
+    body = JSON.stringify({ pid: podcast.pid, loadMoreKey: podcast.loadMoreKey })
+  }
   const url = 'https://api.xiaoyuzhoufm.com/v1/episode/list'
   const response: Response = await $fetch(url, {
     method: 'POST',
@@ -31,20 +31,23 @@ async function fetchEpisodeList(appToken: appToken, podcast: Podcast) {
 export default defineEventHandler(async (event) => {
   try {
     const { podcast, appToken } = await readBody(event)
-    const response: Response = await fetchEpisodeList(appToken, podcast)
-    podcast.loadMoreKey = response.loadMoreKey
-    podcast.episods = response.data.map((episode) => {
-      return {
-        eid: episode.eid,
-        type: 'Episode',
-        title: episode.title,
-        datePublished: episode.pubDate,
-        duration: episode.duration,
-        description: episode.description,
-        mediaUrl: episode.enclosure.url,
-        picUrl: episode.image.picUrl,
-      }
-    })
+    let episods = []
+    do {
+      const response: Response = await fetchEpisodeList(appToken, podcast)
+      podcast.loadMoreKey = response.loadMoreKey
+      episods = response.data.map((episode) => {
+        return {
+          eid: episode.eid,
+          title: episode.title,
+          datePublished: episode.pubDate,
+          duration: episode.duration,
+          description: episode.description,
+          mediaUrl: episode.enclosure.url,
+          picUrl: episode.image.picUrl,
+        }
+      })
+      podcast.episods = podcast.episods ? podcast.episods.concat(episods) : episods
+    } while (podcast.episods.length < podcast.episodeCount)
     return podcast
   }
   catch (error) {

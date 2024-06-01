@@ -47,7 +47,8 @@ async function handlePodcast() {
   if (response === null)
     return null
   podcastStore.setPodcastInfo(response as Podcast)
-  await addPodcastToPg(response as Podcast)
+  console.log(response)
+  // await addPodcastToPg(response as Podcast)
 }
 
 async function addPodcastToPg(podcast: Podcast) {
@@ -80,7 +81,8 @@ async function handleEpisodeList() {
     return null
 
   podcastStore.setPodcastDetails(response as Podcast)
-  await addEpisodsToPg(response as Podcast)
+  console.log(response)
+  // await addEpisodsToPg(response as Podcast)
 }
 
 async function addEpisodsToPg(podcast: Podcast) {

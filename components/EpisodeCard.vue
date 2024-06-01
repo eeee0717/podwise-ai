@@ -5,10 +5,15 @@ import type { Episode } from '~/types'
 const props = defineProps<{
   episode: Episode
 }>()
-
-const newDate: string = format(props.episode.datePublished as Date, 'yyyy-MM-dd')
-const duration_hours = Math.floor(props.episode.duration as number / 3600)
-const duration_minutes = Math.floor((props.episode.duration as number % 3600) / 60)
+const newDate = computed(() => {
+  return format(props.episode.datePublished as Date, 'yyyy-MM-dd')
+})
+const duration_hours = computed(() => {
+  return Math.floor(props.episode.duration as number / 3600)
+})
+const duration_minutes = computed(() => {
+  return Math.floor((props.episode.duration as number % 3600) / 60)
+})
 </script>
 
 <template>

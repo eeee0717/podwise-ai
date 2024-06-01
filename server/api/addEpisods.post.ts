@@ -26,6 +26,6 @@ export default defineEventHandler(async (event) => {
   }
   catch (error) {
     console.error(error)
-    return { msg: 'An error occurred while adding the podcast' }
+    return { data: null, msg: 'An error occurred while adding the podcast' }
   }
 })

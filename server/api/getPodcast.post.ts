@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
       author: data.author,
       description: data.description,
       picUrl: data.image.picUrl,
+      episodeCount: data.episodeCount,
     }
     return podcast
   }

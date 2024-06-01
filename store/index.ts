@@ -17,6 +17,7 @@ export const usePodcastStore = defineStore('podcast', () => {
     podcast.value.author = value.author
     podcast.value.description = value.description
     podcast.value.picUrl = value.picUrl
+    podcast.value.episodeCount = value.episodeCount
   }
   return { podcast, setPodcastInfo, setPodcastDetails }
 })
