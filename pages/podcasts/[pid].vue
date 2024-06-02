@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { usePodcastStore } from '~/store'
 import type { Episode, Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
 const route = useRoute()
+const podcastStore = usePodcastStore()
 const podcast = ref<Podcast | null>(null)
 const episods = ref<Episode[] | null>(null)
 const page = ref(1)
@@ -15,20 +17,24 @@ const filter = [
 ]
 const filterSelected = ref(filter[0].value)
 onMounted(async () => {
-  const { data: podcastData } = await supabase.from('podcast').select('*').eq('pid', route.params.pid)
-  if (podcastData === null) {
-    return
-  }
-  podcast.value = podcastData[0]
-  const { data: episodsData } = await supabase.from('episods').select('*').eq('pid', route.params.pid)
-  episods.value = episodsData
+  // console.log(route.params.pid as string)
+  await podcastStore.fetchPodcast(route.params.pid as string)
+  await podcastStore.fetchEpisodeList(route.params.pid as string)
+
+  // const { data: podcastData } = await supabase.from('podcast').select('*').eq('pid', route.params.pid)
+  // if (podcastData === null) {
+  //   return
+  // }
+  // podcast.value = podcastData[0]
+  // const { data: episodsData } = await supabase.from('episods').select('*').eq('pid', route.params.pid)
+  // episods.value = episodsData
 })
 const filteredEpisods = computed(() => {
-  if (!episods.value) {
+  if (!podcastStore.podcast.episods) {
     return []
   }
   // 克隆 episods，以避免改变原数组
-  const sortedEpisods: Episode[] = episods.value
+  const sortedEpisods: Episode[] = podcastStore.podcast.episods
 
   // 根据 filterselected 的值进行排序
   if (filterSelected.value === 'old') {
@@ -58,22 +64,22 @@ const pageEpisods = computed(() => {
 <template>
   <div>
     <div class="relative flex flex-col items-center gap-y-4  p-6 pb-9 bg-gradient-to-br from-cyan-800/10 to-violet-800/10 dark:from-cyan-950 dark:to-violet-950 lg:flex-row lg:gap-x-6">
-      <img :src="podcast?.picUrl" crossorigin="anonymous" class="rounded-md w-44 h-44 shadow">
+      <img :src="podcastStore.podcast?.picUrl" crossorigin="anonymous" class="rounded-md w-44 h-44 shadow">
       <div class="flex flex-col items-center gap-y-2 lg:items-start">
         <h1 class="text-lg font-semibold line-clamp-2 sm:text-xl lg:text-2xl">
-          {{ podcast?.title }}
+          {{ podcastStore.podcast?.title }}
         </h1>
         <h2 class="flex items-center gap-x-2 text-gray:80 text-center lg:text-start">
-          <span>{{ podcast?.author }}</span>
+          <span>{{ podcastStore.podcast?.author }}</span>
         </h2>
         <p class="text-color-secondary line-clamp-3 lg:line-clamp-2 text-gray:80 ">
-          {{ podcast?.description }}
+          {{ podcastStore.podcast?.description }}
         </p>
       </div>
     </div>
-    <div v-if="episods" class="flex flex-col justify-center gap-2 p-2">
+    <div v-if="podcastStore.podcast.episods" class="flex flex-col justify-center gap-2 p-2">
       <div class="flex flex-row justify-center gap-2">
-        <UPagination v-model="page" :page-count="pageCount" :total="episods?.length " />
+        <UPagination v-model="page" :page-count="pageCount" :total="podcastStore.podcast.episods?.length " />
         <USelect v-model="filterSelected" :options="filter" />
       </div>
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">

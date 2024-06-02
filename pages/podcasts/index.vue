@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { usePodcastStore } from '~/store'
 import type { Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
 const podcastList = ref<Podcast[]>([])
-// const podcast = ref<Podcast>()
 onMounted(async () => {
   const { data, error } = await supabase.from('podcast').select('*')
   if (data) {

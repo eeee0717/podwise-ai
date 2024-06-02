@@ -1,31 +1,27 @@
 import { defineStore } from 'pinia'
 import type { Episode, Podcast } from '~/types'
 
+const supabase = useSupabaseClient()
 export const usePodcastStore = defineStore('podcast', () => {
-  const podcast = ref<Podcast | null>(null)
-  function setPodcastDetails(value: Podcast) {
-    if (!podcast.value)
-      podcast.value = {} as Podcast
-    podcast.value.loadMoreKey = value.loadMoreKey
-    podcast.value.episods = value.episods
-  }
-  function setPodcastInfo(value: Podcast) {
-    if (!podcast.value)
-      podcast.value = {} as Podcast
-    podcast.value.pid = value.pid
-    podcast.value.title = value.title
-    podcast.value.author = value.author
-    podcast.value.description = value.description
-    podcast.value.picUrl = value.picUrl
-    podcast.value.episodeCount = value.episodeCount
-  }
-  return { podcast, setPodcastInfo, setPodcastDetails }
-})
+  const podcast = ref<Podcast>({})
 
-export const useEpisodeStore = defineStore('episode', () => {
-  const episode = ref<Episode | null>(null)
-  function setEpisode(value: Episode) {
-    episode.value = value
+  async function fetchPodcast(pid: string) {
+    if (podcast && podcast.value.pid === pid) {
+      // 如果已经有数据且pid相同，则无需重新获取
+      return
+    }
+    podcast.value = {}
+    const { data: podcastData } = await supabase.from('podcast').select('*').eq('pid', pid)
+    podcast.value = podcastData ? podcastData[0] : {}
   }
-  return { episode, setEpisode }
+  async function fetchEpisodeList(pid: string) {
+    if (podcast.value.episods && podcast.value.episods.length > 0 && podcast.value && podcast.value.pid === pid) {
+      // 如果已经有数据且pid相同，则无需重新获取
+      return
+    }
+    const { data: episodesData } = await supabase.from('episods').select('*').eq('pid', pid)
+    podcast.value.episods = episodesData || []
+  }
+
+  return { podcast, fetchPodcast, fetchEpisodeList }
 })

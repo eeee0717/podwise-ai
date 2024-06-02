@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useEpisodeStore, usePodcastStore } from '~/store'
 import type { Episode, Podcast } from '~/types'
 
 const importUrl = useLocalStorage('importUrl', '')
@@ -7,8 +6,8 @@ const toast = useToast()
 const accessToken = useLocalStorage('accessToken', '')
 const deviceId = useLocalStorage('deviceId', '')
 const freshToken = useLocalStorage('freshToken', '')
-const episodeStore = useEpisodeStore()
-const podcastStore = usePodcastStore()
+const episode = ref<Episode>({})
+const podcast = ref<Podcast>({})
 async function Import() {
   if (importUrl.value === '')
     return
@@ -46,7 +45,7 @@ async function handlePodcast() {
   })
   if (response === null)
     return null
-  podcastStore.setPodcastInfo(response as Podcast)
+  podcast.value = response as Podcast
   await addPodcastToPg(response as Podcast)
 }
 
@@ -61,11 +60,12 @@ async function addPodcastToPg(podcast: Podcast) {
       picUrl: podcast.picUrl,
     }),
   })
+  console.log(data, msg)
 }
 
 async function handleEpisodeList() {
   const data = {
-    podcast: podcastStore.podcast,
+    podcast: podcast.value,
     appToken: getAppToken(),
   }
   const response = await $fetch('/api/getEpisodeList', {
@@ -78,7 +78,8 @@ async function handleEpisodeList() {
   if (response === null)
     return null
 
-  podcastStore.setPodcastDetails(response as Podcast)
+  podcast.value.loadMoreKey = response.loadMoreKey
+  podcast.value.episods = response.episods
   await addEpisodsToPg(response as Podcast)
 }
 
@@ -107,7 +108,7 @@ async function handleEpisode() {
   })
   if (response === null)
     return null
-  episodeStore.setEpisode(response as Episode)
+  episode.value = response as Episode
 }
 </script>
 
