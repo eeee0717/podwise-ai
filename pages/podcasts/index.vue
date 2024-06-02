@@ -1,23 +1,23 @@
 <script setup lang="ts">
+import { usePodcastStore } from '~/store'
 import type { Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
-const podcastList = ref<Podcast[]>([])
+const podcastStore = usePodcastStore()
 onMounted(async () => {
-  const { data, error } = await supabase.from('podcast').select('*')
-  if (data) {
-    podcastList.value = data
-  }
-  else {
-    console.error('error', error)
+  const { data } = await supabase.from('podcast').select('pid')
+  if (!data)
+    return
+  for (const item of data) {
+    await podcastStore.fetchPodcast(item.pid)
   }
 })
 </script>
 
 <template>
-  <div v-if="podcastList" class="p2">
-    <div v-for="podcast, idx in podcastList" :key="idx">
-      <PodcastCard :podcast="podcast" />
+  <div v-if="podcastStore.podcasts" class="p2">
+    <div v-for="podcast, idx in podcastStore.podcasts" :key="idx">
+      <PodcastCard :podcast="podcast[1]" />
     </div>
   </div>
 </template>

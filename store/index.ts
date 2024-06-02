@@ -3,25 +3,29 @@ import type { Episode, Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
 export const usePodcastStore = defineStore('podcast', () => {
-  const podcast = ref<Podcast>({})
-
+  const podcasts = ref<Map<string, Podcast>>(new Map())
   async function fetchPodcast(pid: string) {
-    if (podcast && podcast.value.pid === pid) {
-      // 如果已经有数据且pid相同，则无需重新获取
+    if (podcasts.value.has(pid)) {
       return
     }
-    podcast.value = {}
     const { data: podcastData } = await supabase.from('podcast').select('*').eq('pid', pid)
-    podcast.value = podcastData ? podcastData[0] : {}
+    if (podcastData) {
+      // 将获取到的podcastData添加到podcasts Map中
+      podcasts.value.set(pid, podcastData[0])
+    }
   }
   async function fetchEpisodeList(pid: string) {
-    if (podcast.value.episods && podcast.value.episods.length > 0 && podcast.value && podcast.value.pid === pid) {
-      // 如果已经有数据且pid相同，则无需重新获取
+    const podcast = podcasts.value.get(pid)
+    if (podcast && podcast.episods && podcast.episods.length > 0) {
       return
     }
     const { data: episodesData } = await supabase.from('episods').select('*').eq('pid', pid)
-    podcast.value.episods = episodesData || []
+    if (podcast && episodesData) {
+      // 更新podcast对象中的episods属性
+      podcast.episods = episodesData
+      // 由于Map中的值（value）是直接赋值的引用，所以这里直接更新podcast对象即可，无需再次set到Map中
+    }
   }
 
-  return { podcast, fetchPodcast, fetchEpisodeList }
+  return { podcasts, fetchPodcast, fetchEpisodeList }
 })
