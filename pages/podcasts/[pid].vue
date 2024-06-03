@@ -2,6 +2,7 @@
 import { usePodcastStore } from '~/store'
 import type { Episode, Podcast } from '~/types'
 
+const toast = useToast()
 const route = useRoute()
 const podcastStore = usePodcastStore()
 const page = ref(1)
@@ -50,11 +51,15 @@ const pageEpisods = computed(() => {
   const end = start + pageCount
   return filteredEpisods.value.slice(start, end)
 })
+const isFetching = ref<boolean>(false)
 async function fetchNew() {
+  isFetching.value = true
   await getAuthToken()
   await handlePodcast(pid, {} as Ref<Podcast>)
   await podcastStore.fetchPodcast(pid)
   await podcastStore.fetchEpisodeList(pid)
+  isFetching.value = false
+  toast.add({ title: '已更新', timeout: 2000 })
 }
 </script>
 
@@ -78,8 +83,8 @@ async function fetchNew() {
       <div class="flex flex-row justify-center gap-2">
         <UPagination v-model="page" :page-count="pageCount" :total="podcast?.episods.length " />
         <USelect v-model="filterSelected" :options="filter" />
-        <UButton variant="outline" @click="fetchNew">
-          fetch new
+        <UButton variant="outline" :icon="`${isFetching ? 'i-svg-spinners-90-ring-with-bg' : ''}`" @click="fetchNew">
+          {{ isFetching ? 'is fetching' : 'fetch new' }}
         </UButton>
       </div>
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
