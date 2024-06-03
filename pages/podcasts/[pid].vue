@@ -53,7 +53,6 @@ const pageEpisods = computed(() => {
 async function fetchNew() {
   await getAuthToken()
   await handlePodcast(pid, {} as Ref<Podcast>)
-  podcastStore.podcasts.delete(pid)
   await podcastStore.fetchPodcast(pid)
   await podcastStore.fetchEpisodeList(pid)
 }
