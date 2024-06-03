@@ -7,6 +7,7 @@ export interface Podcast {
   episodeCount?: number
   loadMoreKey?: string
   episods?: Episode[]
+  total?: number
 }
 
 export interface Episode {

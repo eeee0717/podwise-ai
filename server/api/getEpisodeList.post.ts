@@ -24,14 +24,13 @@ async function fetchEpisodeList(appToken: appToken, podcast: Podcast) {
     headers,
     body,
   })
-
+  // console.log(response)
   return response
 }
 
 export default defineEventHandler(async (event) => {
   try {
     const { podcast, appToken } = await readBody(event)
-
     if (!podcast.episods) {
       podcast.episods = []
     }

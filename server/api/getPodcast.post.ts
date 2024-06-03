@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
       description: data.description,
       picUrl: data.image.picUrl,
       episodeCount: data.episodeCount,
+      total: data.episodeCount,
     }
     return podcast
   }

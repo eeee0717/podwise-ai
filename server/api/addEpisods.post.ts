@@ -9,10 +9,10 @@ export default defineEventHandler(async (event) => {
     const { data: episodeData } = await supabase.from('episods').select('*').eq('pid', pid)
     let existEids: string[] = []
     if (episodeData && episodeData.length > 0) {
-      existEids = episodeData.map((episode: Episode) => episode.eid)
+      existEids = episodeData.map((episode: Episode) => episode.eid) as string[]
     }
     // 过滤掉已存在的episode
-    const episodsFiltered = episods.filter((episode: Episode) => !existEids.includes(episode.eid))
+    const episodsFiltered = episods.filter((episode: Episode) => !existEids.includes(episode.eid as string))
     const insertData: Episode[] = episodsFiltered.map((episode: Episode) => {
       return {
         pid,

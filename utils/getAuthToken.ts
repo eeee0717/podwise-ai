@@ -20,3 +20,11 @@ export async function getAuthToken() {
   freshToken.value = authToken['x-jike-refresh-token']
   deviceId.value = '69F65C43-9B15-4621-AAA2-83F894DC0B51'
 }
+
+export function getAppToken() {
+  return {
+    accessToken: accessToken.value,
+    deviceId: deviceId.value,
+    freshToken: freshToken.value,
+  }
+}

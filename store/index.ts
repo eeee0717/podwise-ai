@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Episode, Podcast } from '~/types'
+import type { Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
 export const usePodcastStore = defineStore('podcast', () => {
@@ -16,7 +16,7 @@ export const usePodcastStore = defineStore('podcast', () => {
   }
   async function fetchEpisodeList(pid: string) {
     const podcast = podcasts.value.get(pid)
-    if (podcast && podcast.episods && podcast.episods.length > 0) {
+    if (podcast && podcast.episods && podcast.episods.length === podcast.total) {
       return
     }
     const { data: episodesData } = await supabase.from('episods').select('*').eq('pid', pid)

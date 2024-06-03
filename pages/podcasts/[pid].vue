@@ -50,6 +50,13 @@ const pageEpisods = computed(() => {
   const end = start + pageCount
   return filteredEpisods.value.slice(start, end)
 })
+async function fetchNew() {
+  await getAuthToken()
+  await handlePodcast(pid, {} as Ref<Podcast>)
+  podcastStore.podcasts.delete(pid)
+  await podcastStore.fetchPodcast(pid)
+  await podcastStore.fetchEpisodeList(pid)
+}
 </script>
 
 <template>
@@ -72,6 +79,9 @@ const pageEpisods = computed(() => {
       <div class="flex flex-row justify-center gap-2">
         <UPagination v-model="page" :page-count="pageCount" :total="podcast?.episods.length " />
         <USelect v-model="filterSelected" :options="filter" />
+        <UButton variant="outline" @click="fetchNew">
+          fetch new
+        </UButton>
       </div>
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <EpisodeCard v-for="episode in pageEpisods" :key="episode.eid" :episode="episode" />

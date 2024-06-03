@@ -3,9 +3,6 @@ import type { Episode, Podcast } from '~/types'
 
 const importUrl = useLocalStorage('importUrl', '')
 const toast = useToast()
-const accessToken = useLocalStorage('accessToken', '')
-const deviceId = useLocalStorage('deviceId', '')
-const freshToken = useLocalStorage('freshToken', '')
 const episode = ref<Episode>({})
 const podcast = ref<Podcast>({})
 async function Import() {
@@ -14,85 +11,52 @@ async function Import() {
   // 获取 token
   await getAuthToken()
   if (importUrl.value.match(xiaoyuzhouPodcastRegex)) {
-    await handlePodcast()
-    await handleEpisodeList()
+    await handlePodcast(importUrl.value.split('/').pop() ?? '', podcast)
   }
   else if (importUrl.value.match(xiaoyuzhouEpisodeRegex)) {
     await handleEpisode()
   }
 }
 
-function getAppToken() {
-  return {
-    accessToken: accessToken.value,
-    deviceId: deviceId.value,
-    freshToken: freshToken.value,
-  }
-}
+// async function handlePodcast() {
+//   const data = {
+//     pid: importUrl.value.split('/').pop() ?? '',
+//     appToken: getAppToken(),
+//   }
 
-async function handlePodcast() {
-  const data = {
-    pid: importUrl.value.split('/').pop() ?? '',
-    appToken: getAppToken(),
-  }
+//   const response = await $fetch('/api/getPodcast', {
+//     method: 'POST',
+//     body: JSON.stringify(data),
+//   }).catch((err) => {
+//     toast.add({ title: JSON.stringify(err) })
+//     return null
+//   })
+//   if (response === null)
+//     return null
+//   podcast.value = response as Podcast
+//   console.log(podcast.value)
+//   await addPodcastToPg(podcast.value)
+// }
 
-  const response = await $fetch('/api/getPodcast', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }).catch((err) => {
-    toast.add({ title: JSON.stringify(err) })
-    return null
-  })
-  if (response === null)
-    return null
-  podcast.value = response as Podcast
-  await addPodcastToPg(response as Podcast)
-}
+// async function handleEpisodeList() {
+//   const data = {
+//     podcast: podcast.value,
+//     appToken: getAppToken(),
+//   }
+//   const response = await $fetch('/api/getEpisodeList', {
+//     method: 'POST',
+//     body: JSON.stringify(data),
+//   }).catch((err) => {
+//     toast.add({ title: JSON.stringify(err) })
+//     return null
+//   })
+//   if (response === null)
+//     return null
 
-async function addPodcastToPg(podcast: Podcast) {
-  const { data, msg } = await $fetch('/api/addPodcast', {
-    method: 'POST',
-    body: JSON.stringify({
-      pid: podcast.pid,
-      title: podcast.title,
-      author: podcast.author,
-      description: podcast.description,
-      picUrl: podcast.picUrl,
-    }),
-  })
-  console.log(data, msg)
-}
-
-async function handleEpisodeList() {
-  const data = {
-    podcast: podcast.value,
-    appToken: getAppToken(),
-  }
-  const response = await $fetch('/api/getEpisodeList', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }).catch((err) => {
-    toast.add({ title: JSON.stringify(err) })
-    return null
-  })
-  if (response === null)
-    return null
-
-  podcast.value.loadMoreKey = response.loadMoreKey
-  podcast.value.episods = response.episods
-  await addEpisodsToPg(response as Podcast)
-}
-
-async function addEpisodsToPg(podcast: Podcast) {
-  const { data, msg } = await $fetch('/api/addEpisods', {
-    method: 'POST',
-    body: JSON.stringify({
-      pid: podcast.pid,
-      episods: podcast.episods,
-    }),
-  })
-  console.log(data, msg)
-}
+//   podcast.value.loadMoreKey = response.loadMoreKey
+//   podcast.value.episods = response.episods
+//   await addEpisodsToPg(response as Podcast)
+// }
 
 async function handleEpisode() {
   const data = {

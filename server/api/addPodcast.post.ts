@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     author: body.author,
     description: body.description,
     picUrl: body.picUrl,
+    total: body.total,
   }]).select('*')
 
   return { data: responseData, msg: 'podcast added' }
