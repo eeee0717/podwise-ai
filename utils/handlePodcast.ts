@@ -1,64 +1,41 @@
 import type { Episode, Podcast } from '~/types'
 
 export async function handlePodcast(pid: string) {
-  const podcast = ref<Podcast>({})
-  await podcastHandler(pid, podcast)
+  const podcast = await fetchAndProcess<Podcast>('/api/getPodcast', { pid })
+  if (!podcast) {
+    throw new Error('Podcast not found')
+  }
   await episodeListHandler(podcast)
-  await addPodcastToPg(podcast.value)
-  await addEpisodsToPg(podcast.value)
+  await addPodcastToPg(podcast)
+  await addEpisodsToPg(podcast)
 }
+
 export async function handleEpisode(eid: string) {
-  const podcast = ref<Podcast>({})
-  const episode = ref<Episode>({})
-  await episodeHandler(eid, episode)
-  await podcastHandler(episode.value.pid as string, podcast)
-  // await addPodcastToPg(podcast.value)
-  // await addEpisodeToPg(episode.value)
+  const episode = await fetchAndProcess<Episode>('/api/getEpisode', { eid })
+  if (!episode) {
+    throw new Error('Episode not found')
+  }
+  const podcast = await fetchAndProcess<Podcast>('/api/getPodcast', { pid: episode.pid })
+  if (!podcast) {
+    throw new Error('Podcast not found')
+  }
+  await addPodcastToPg(podcast)
+  await addEpisodeToPg(episode)
 }
 
-async function podcastHandler(pid: string, podcast: Ref<Podcast>) {
-  const data = {
-    pid,
-    appToken: getAppToken(),
-  }
-
-  const response = await $fetch('/api/getPodcast', {
+async function fetchAndProcess<T>(url: string, data: object): Promise<T | null> {
+  const response = await $fetch(url, {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, appToken: getAppToken() }),
+  })
+  return response ? (response as T) : null
+}
+
+async function episodeListHandler(podcast: Podcast) {
+  const response = await fetchAndProcess<{ episods: Episode[] }>('/api/getEpisodeList', {
+    podcast,
   })
   if (response === null)
     return null
-  podcast.value = response as Podcast
-}
-
-async function episodeListHandler(podcast: Ref<Podcast>) {
-  const data = {
-    podcast: podcast.value,
-    appToken: getAppToken(),
-  }
-  const response = await $fetch('/api/getEpisodeList', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
-  if (response === null)
-    return null
-
-  podcast.value.loadMoreKey = response.loadMoreKey
-  podcast.value.episods = response.episods
-  // console.log('response', response)
-}
-
-async function episodeHandler(eid: string, episode: Ref<Episode>) {
-  const data = {
-    eid,
-    appToken: getAppToken(),
-  }
-  const response = await $fetch('/api/getEpisode', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
-  if (response === null)
-    return null
-  episode.value = response as Episode
-  // console.log(episode.value)
+  podcast.episods = response.episods
 }
