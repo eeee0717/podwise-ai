@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
     const { appToken, eid } = await readBody(event)
     const data = await fetchEpisode(appToken, eid)
     const episode: Episode = {
+      pid: data.pid,
       eid,
       title: data.title,
       description: data.description,

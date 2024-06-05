@@ -1,4 +1,4 @@
-import type { Podcast } from '~/types'
+import type { Episode, Podcast } from '~/types'
 
 export async function addPodcastToPg(podcast: Podcast) {
   const { data, msg } = await $fetch('/api/addPodcast', {
@@ -21,6 +21,16 @@ export async function addEpisodsToPg(podcast: Podcast) {
     body: JSON.stringify({
       pid: podcast.pid,
       episods: podcast.episods,
+    }),
+  })
+  console.log(data, msg)
+}
+
+export async function addEpisodeToPg(episode: Episode) {
+  const { data, msg } = await $fetch('/api/addEpisode', {
+    method: 'POST',
+    body: JSON.stringify({
+      episode,
     }),
   })
   console.log(data, msg)

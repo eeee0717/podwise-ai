@@ -2,7 +2,6 @@
 import type { Episode, Podcast } from '~/types'
 
 const importUrl = useLocalStorage('importUrl', '')
-const toast = useToast()
 const episode = ref<Episode>({})
 const podcast = ref<Podcast>({})
 async function Import() {
@@ -14,66 +13,26 @@ async function Import() {
     await handlePodcast(importUrl.value.split('/').pop() ?? '', podcast)
   }
   else if (importUrl.value.match(xiaoyuzhouEpisodeRegex)) {
-    await handleEpisode()
+    await handleEpisode(importUrl.value.split('/').pop() ?? '', episode)
   }
 }
 
-// async function handlePodcast() {
+// async function handleEpisode() {
 //   const data = {
-//     pid: importUrl.value.split('/').pop() ?? '',
+//     eid: importUrl.value.split('/').pop() ?? '',
 //     appToken: getAppToken(),
 //   }
-
-//   const response = await $fetch('/api/getPodcast', {
+//   const response = await $fetch('/api/getEpisode', {
 //     method: 'POST',
 //     body: JSON.stringify(data),
 //   }).catch((err) => {
-//     toast.add({ title: JSON.stringify(err) })
-//     return null
+//     return err
 //   })
 //   if (response === null)
 //     return null
-//   podcast.value = response as Podcast
-//   console.log(podcast.value)
-//   await addPodcastToPg(podcast.value)
+//   episode.value = response as Episode
+//   console.log(episode.value)
 // }
-
-// async function handleEpisodeList() {
-//   const data = {
-//     podcast: podcast.value,
-//     appToken: getAppToken(),
-//   }
-//   const response = await $fetch('/api/getEpisodeList', {
-//     method: 'POST',
-//     body: JSON.stringify(data),
-//   }).catch((err) => {
-//     toast.add({ title: JSON.stringify(err) })
-//     return null
-//   })
-//   if (response === null)
-//     return null
-
-//   podcast.value.loadMoreKey = response.loadMoreKey
-//   podcast.value.episods = response.episods
-//   await addEpisodsToPg(response as Podcast)
-// }
-
-async function handleEpisode() {
-  const data = {
-    eid: importUrl.value.split('/').pop() ?? '',
-    appToken: getAppToken(),
-  }
-  const response = await $fetch('/api/getEpisode', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }).catch((err) => {
-    toast.add({ title: JSON.stringify(err) })
-    return null
-  })
-  if (response === null)
-    return null
-  episode.value = response as Episode
-}
 </script>
 
 <template>

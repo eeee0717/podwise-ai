@@ -1,4 +1,4 @@
-import type { Podcast } from '~/types'
+import type { Episode, Podcast } from '~/types'
 
 export async function handlePodcast(pid: string, podcast: Ref<Podcast>) {
   await podcastHandler(pid, podcast)
@@ -40,4 +40,22 @@ async function episodeListHandler(podcast: Ref<Podcast>) {
   podcast.value.loadMoreKey = response.loadMoreKey
   podcast.value.episods = response.episods
   await addEpisodsToPg(response as Podcast)
+}
+
+export async function handleEpisode(eid: string, episode: Ref<Episode>) {
+  const data = {
+    eid,
+    appToken: getAppToken(),
+  }
+  const response = await $fetch('/api/getEpisode', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).catch((err) => {
+    return err
+  })
+  if (response === null)
+    return null
+  episode.value = response as Episode
+  console.log(episode.value)
+  await addEpisodeToPg(episode.value)
 }

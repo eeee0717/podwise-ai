@@ -11,6 +11,7 @@ export interface Podcast {
 }
 
 export interface Episode {
+  pid?: string
   eid?: string
   title?: string
   datePublished?: Date
