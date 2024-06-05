@@ -1,5 +1,4 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { Episode } from '~/types'
 
 export default defineEventHandler(async (event) => {
   try {

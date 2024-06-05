@@ -12,8 +12,8 @@ export async function handleEpisode(eid: string) {
   const episode = ref<Episode>({})
   await episodeHandler(eid, episode)
   await podcastHandler(episode.value.pid as string, podcast)
-  await addPodcastToPg(podcast.value)
-  await addEpisodeToPg(episode.value)
+  // await addPodcastToPg(podcast.value)
+  // await addEpisodeToPg(episode.value)
 }
 
 async function podcastHandler(pid: string, podcast: Ref<Podcast>) {
@@ -25,8 +25,6 @@ async function podcastHandler(pid: string, podcast: Ref<Podcast>) {
   const response = await $fetch('/api/getPodcast', {
     method: 'POST',
     body: JSON.stringify(data),
-  }).catch((err) => {
-    return err
   })
   if (response === null)
     return null
@@ -41,8 +39,6 @@ async function episodeListHandler(podcast: Ref<Podcast>) {
   const response = await $fetch('/api/getEpisodeList', {
     method: 'POST',
     body: JSON.stringify(data),
-  }).catch((err) => {
-    return err
   })
   if (response === null)
     return null
@@ -60,8 +56,6 @@ async function episodeHandler(eid: string, episode: Ref<Episode>) {
   const response = await $fetch('/api/getEpisode', {
     method: 'POST',
     body: JSON.stringify(data),
-  }).catch((err) => {
-    return err
   })
   if (response === null)
     return null

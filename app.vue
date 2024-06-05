@@ -6,7 +6,7 @@ import '@unocss/reset/tailwind.css'
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <UNotifications class="w-50" position="top-0 bottom-auto" />
+  <UNotifications class="w-100" position="top-0 bottom-auto" />
 </template>
 
 <style>
