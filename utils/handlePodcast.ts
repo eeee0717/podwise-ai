@@ -1,8 +1,19 @@
 import type { Episode, Podcast } from '~/types'
 
-export async function handlePodcast(pid: string, podcast: Ref<Podcast>) {
+export async function handlePodcast(pid: string) {
+  const podcast = ref<Podcast>({})
   await podcastHandler(pid, podcast)
   await episodeListHandler(podcast)
+  await addPodcastToPg(podcast.value)
+  await addEpisodsToPg(podcast.value)
+}
+export async function handleEpisode(eid: string) {
+  const podcast = ref<Podcast>({})
+  const episode = ref<Episode>({})
+  await episodeHandler(eid, episode)
+  await podcastHandler(episode.value.pid as string, podcast)
+  await addPodcastToPg(podcast.value)
+  await addEpisodeToPg(episode.value)
 }
 
 async function podcastHandler(pid: string, podcast: Ref<Podcast>) {
@@ -20,7 +31,6 @@ async function podcastHandler(pid: string, podcast: Ref<Podcast>) {
   if (response === null)
     return null
   podcast.value = response as Podcast
-  await addPodcastToPg(podcast.value)
 }
 
 async function episodeListHandler(podcast: Ref<Podcast>) {
@@ -39,10 +49,10 @@ async function episodeListHandler(podcast: Ref<Podcast>) {
 
   podcast.value.loadMoreKey = response.loadMoreKey
   podcast.value.episods = response.episods
-  await addEpisodsToPg(response as Podcast)
+  // console.log('response', response)
 }
 
-export async function handleEpisode(eid: string, episode: Ref<Episode>) {
+async function episodeHandler(eid: string, episode: Ref<Episode>) {
   const data = {
     eid,
     appToken: getAppToken(),
@@ -56,6 +66,5 @@ export async function handleEpisode(eid: string, episode: Ref<Episode>) {
   if (response === null)
     return null
   episode.value = response as Episode
-  console.log(episode.value)
-  await addEpisodeToPg(episode.value)
+  // console.log(episode.value)
 }

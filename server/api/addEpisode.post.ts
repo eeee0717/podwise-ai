@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
     const { episode } = await readBody(event)
     // 查询数据库中是否存在episode
     const { data: episodeData } = await supabase.from('episods').select('*').eq('eid', episode.eid)
-    console.log(episodeData)
     if (episodeData && episodeData?.length > 0) {
       return { data: episodeData, msg: 'episode exist' }
     }

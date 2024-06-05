@@ -1,38 +1,17 @@
 <script setup lang="ts">
-import type { Episode, Podcast } from '~/types'
-
 const importUrl = useLocalStorage('importUrl', '')
-const episode = ref<Episode>({})
-const podcast = ref<Podcast>({})
 async function Import() {
   if (importUrl.value === '')
     return
   // 获取 token
   await getAuthToken()
   if (importUrl.value.match(xiaoyuzhouPodcastRegex)) {
-    await handlePodcast(importUrl.value.split('/').pop() ?? '', podcast)
+    await handlePodcast(importUrl.value.split('/').pop() ?? '')
   }
   else if (importUrl.value.match(xiaoyuzhouEpisodeRegex)) {
-    await handleEpisode(importUrl.value.split('/').pop() ?? '', episode)
+    await handleEpisode(importUrl.value.split('/').pop() ?? '')
   }
 }
-
-// async function handleEpisode() {
-//   const data = {
-//     eid: importUrl.value.split('/').pop() ?? '',
-//     appToken: getAppToken(),
-//   }
-//   const response = await $fetch('/api/getEpisode', {
-//     method: 'POST',
-//     body: JSON.stringify(data),
-//   }).catch((err) => {
-//     return err
-//   })
-//   if (response === null)
-//     return null
-//   episode.value = response as Episode
-//   console.log(episode.value)
-// }
 </script>
 
 <template>

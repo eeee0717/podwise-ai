@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
       datePublished: data.pubDate,
       duration: data.duration,
       mediaUrl: data.enclosure.url,
-      picUrl: data.image.picUrl,
+      picUrl: data.image?.picUrl ?? data.podcast.image.picUrl,
     }
     return episode
   }
