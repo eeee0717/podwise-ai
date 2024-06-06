@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { format } from 'date-fns'
+import { useEpisodeStore } from '~/store/useEpisodeStore'
 import type { Episode } from '~/types'
 
 const props = defineProps<{
   episode: Episode
 }>()
+const episodeStore = useEpisodeStore()
+
 const newDate = computed(() => {
   return format(props.episode.datePublished as Date, 'yyyy-MM-dd')
 })
@@ -14,6 +17,10 @@ const duration_hours = computed(() => {
 const duration_minutes = computed(() => {
   return Math.floor((props.episode.duration as number % 3600) / 60)
 })
+
+function play() {
+  episodeStore.setEpisode(props.episode)
+}
 </script>
 
 <template>
@@ -43,7 +50,7 @@ const duration_minutes = computed(() => {
         </div>
       </div>
       <div class="flex items-center">
-        <UButton size="lg" variant="ghost" color="white" icon="i-carbon-information">
+        <UButton size="lg" variant="ghost" color="white" icon="i-carbon-information" :to="`/episods/${props.episode.eid}`" @click="play">
           play
         </UButton>
       </div>

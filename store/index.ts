@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
-export const usePodcastStore = defineStore('podcast', () => {
+export const usePodcastStore = defineStore('podcasts', () => {
   const podcasts = ref<Map<string, Podcast>>(new Map())
   async function fetchPodcast(pid: string) {
     if (podcasts.value.has(pid)) {
