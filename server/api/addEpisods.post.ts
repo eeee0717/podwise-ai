@@ -20,14 +20,14 @@ export default defineEventHandler(async (event) => {
         title: episode.title,
         datePublished: episode.datePublished,
         duration: episode.duration,
-        description: episode.description,
+        shownotes: episode.shownotes,
         mediaUrl: episode.mediaUrl,
         picUrl: episode.picUrl,
       }
     })
     // eslint-disable-next-line ts/ban-ts-comment
     // @ts-expect-error
-    const { data: responseData, error } = await supabase.from('episods').insert(insertData).select('*')
+    const { data: responseData, error } = await supabase.from('episods').upsert(insertData).select('*')
     if (error)
       throw error
     return { data: responseData, msg: 'podcast added' }

@@ -22,11 +22,12 @@ export default defineEventHandler(async (event) => {
   try {
     const { appToken, eid } = await readBody(event)
     const data = await fetchEpisode(appToken, eid)
+    // TODO: BUG shownotes is a unicode cannot be stored
     const episode: Episode = {
       pid: data.pid,
       eid,
       title: data.title,
-      description: data.description,
+      shownotes: String.fromCharCode(data.shownotes),
       datePublished: data.pubDate,
       duration: data.duration,
       mediaUrl: data.enclosure.url,

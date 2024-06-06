@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
       title: episode.title,
       datePublished: episode.datePublished,
       duration: episode.duration,
-      description: episode.description,
+      shownotes: episode.shownotes,
       mediaUrl: episode.mediaUrl,
       picUrl: episode.picUrl,
     }

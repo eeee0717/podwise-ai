@@ -15,7 +15,7 @@ export interface Episode {
   title?: string
   datePublished?: Date
   duration?: number
-  description?: string
+  shownotes?: string
   mediaUrl?: string
   picUrl?: string
 }

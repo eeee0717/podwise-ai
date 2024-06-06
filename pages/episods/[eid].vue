@@ -8,7 +8,7 @@ const episodeStore = useEpisodeStore()
   <div>
     This is the episode page {{ $route.params.eid }}
     <pre>
-      {{ episodeStore.episode.description }}
+      {{ episodeStore.episode.shownotes }}
     </pre>
   </div>
 </template>
