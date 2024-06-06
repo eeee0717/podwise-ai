@@ -14,7 +14,7 @@ export async function addPodcastToPg(podcast: Podcast) {
 export async function addEpisodsToPg(podcast: Podcast) {
   await addToPg('/api/addEpisods', {
     pid: podcast.pid,
-    episodes: podcast.episods, // 假设字段应该是episodes而不是episods
+    episods: podcast.episods,
   })
 }
 

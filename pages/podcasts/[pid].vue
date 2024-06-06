@@ -19,7 +19,7 @@ onMounted(async () => {
   await podcastStore.fetchPodcast(pid)
   await podcastStore.fetchEpisodeList(pid)
 })
-const podcast = computed(() => podcastStore.podcasts.get(pid))
+const podcast = ref(podcastStore.podcasts.get(pid))
 
 const filteredEpisods = computed(() => {
   if (!podcast.value?.episods) {
@@ -55,9 +55,10 @@ const isFetching = ref<boolean>(false)
 async function fetchNew() {
   isFetching.value = true
   await getAuthToken()
-  await handlePodcast(pid, {} as Ref<Podcast>)
+  await handlePodcast(pid)
   await podcastStore.fetchPodcast(pid)
   await podcastStore.fetchEpisodeList(pid)
+  podcast.value = podcastStore.podcasts.get(pid)
   isFetching.value = false
   toast.add({ title: '已更新', timeout: 2000 })
 }

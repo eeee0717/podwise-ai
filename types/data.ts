@@ -4,7 +4,6 @@ export interface Podcast {
   author?: string
   description?: string
   picUrl?: string
-  episodeCount?: number
   loadMoreKey?: string
   episods?: Episode[]
   total?: number

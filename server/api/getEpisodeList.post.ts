@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
       podcast.episods = []
     }
     let episods = []
-    while (podcast.episods.length < podcast.episodeCount) {
+    while (podcast.episods.length < podcast.total) {
       const response: Response = await fetchEpisodeList(appToken, podcast)
       podcast.loadMoreKey = response.loadMoreKey
       episods = response.data.map((episode) => {
