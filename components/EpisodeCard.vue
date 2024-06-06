@@ -45,8 +45,8 @@ function play() {
             </p>
           </div>
         </div>
-        <div class="clamped-shownotes text-gray:40 text-sm ">
-          {{ props.episode.shownotes }}
+        <div class="clamped-description text-gray:40 text-sm ">
+          {{ props.episode.description }}
         </div>
       </div>
       <div class="flex items-center">
@@ -59,7 +59,7 @@ function play() {
 </template>
 
 <style scoped>
-  .clamped-shownotes {
+  .clamped-description {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; /* 限制显示的行数 */

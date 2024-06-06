@@ -38,14 +38,14 @@ export default defineEventHandler(async (event) => {
     while (podcast.episods.length < podcast.total) {
       const response: Response = await fetchEpisodeList(appToken, podcast)
       podcast.loadMoreKey = response.loadMoreKey
-      // TODO: BUG shownotes is a unicode cannot be stored
       episods = response.data.map((episode) => {
         return {
           eid: episode.eid,
           title: episode.title,
           datePublished: episode.pubDate,
           duration: episode.duration,
-          shownotes: String.fromCharCode(episode.shownotes),
+          description: episode.description,
+          shownotes: episode.shownotes.replace(/\0/g, ''),
           mediaUrl: episode.enclosure.url,
           picUrl: episode.image?.picUrl || podcast.picUrl,
         }

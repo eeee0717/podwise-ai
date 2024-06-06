@@ -13,6 +13,7 @@ export interface Episode {
   pid?: string
   eid?: string
   title?: string
+  description?: string
   datePublished?: Date
   duration?: number
   shownotes?: string
