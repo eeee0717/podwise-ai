@@ -8,16 +8,6 @@ const props = defineProps<{
 }>()
 const episodeStore = useEpisodeStore()
 
-const newDate = computed(() => {
-  return format(props.episode.datePublished as Date, 'yyyy-MM-dd')
-})
-const duration_hours = computed(() => {
-  return Math.floor(props.episode.duration as number / 3600)
-})
-const duration_minutes = computed(() => {
-  return Math.floor((props.episode.duration as number % 3600) / 60)
-})
-
 function play() {
   episodeStore.setEpisode(props.episode)
 }
@@ -32,14 +22,8 @@ function play() {
             <img crossorigin="anonymous" :src="props.episode.picUrl" alt="cover">
           </div>
           <div grid="~ rows-2">
-            <div class="flex flex-row gap-2 text-gray:80">
-              <span>{{ newDate }}</span>
-              <div class="flex flex-row items-center">
-                <div class="i-carbon-timer" />
-                <span>{{ duration_hours }}h</span>
-                <span>{{ duration_minutes }}m</span>
-              </div>
-            </div>
+            <TimeModule :date-published="props.episode.datePublished" :duration="props.episode.duration" />
+
             <p class="clamped-title">
               {{ props.episode.title }}
             </p>
