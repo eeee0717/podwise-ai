@@ -23,7 +23,6 @@ function play() {
           </div>
           <div grid="~ rows-2">
             <TimeModule :date-published="props.episode.datePublished" :duration="props.episode.duration" />
-
             <p class="clamped-title">
               {{ props.episode.title }}
             </p>
