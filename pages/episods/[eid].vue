@@ -3,6 +3,19 @@ import type { Episode } from '~/types'
 
 const episode = ref<Episode>({})
 const route = useRoute()
+const selectedTab = ref('Shownotes')
+const items = ref([
+  { label: 'Shownotes', icon: 'i-carbon-bookmark' },
+  { label: 'Summary', icon: 'i-carbon-ai-status' },
+  { label: 'Mindmap', icon: 'i-carbon-partition-repartition' },
+  { label: 'Key Words', icon: 'i-carbon-star-review' },
+  { label: 'Transcript', icon: 'i-carbon-ibm-watson-language-translator' },
+
+])
+function tabSelected(index: number) {
+  const item = items.value[index]
+  selectedTab.value = item.label
+}
 onMounted(async () => {
   const supabase = useSupabaseClient()
   const { data } = await supabase.from('episods').select('*').eq('eid', route.params.eid)
@@ -29,9 +42,22 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="mt-11 lg:mt-14 dont-break-out w-[calc(100vw-3rem)] lg:w-auto">
-      <div class="flex justify-center">
-        <div class="shownotes-content prose prose-ol:leading-none prose-ul:leading-none dark:prose-invert max-w-full" v-html="episode.shownotes " />
+    <div class="mt-2 dont-break-out w-[calc(100vw-3rem)] w-auto">
+      <div grid="~ rows-[min-content_1fr]">
+        <UTabs :items="items" class="lg:mx-30 mx-10" @change="tabSelected">
+          <template #default="{ item, selected }">
+            <div class="flex items-center gap-2 relative truncate">
+              <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
+
+              <span class="truncate">{{ item.label }}</span>
+
+              <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+            </div>
+          </template>
+        </UTabs>
+        <div class="flex justify-center">
+          <div v-if="selectedTab === 'Shownotes'" class="shownotes-content prose prose-ol:leading-none prose-ul:leading-none dark:prose-invert max-w-full" v-html="episode.shownotes " />
+        </div>
       </div>
     </div>
   </div>

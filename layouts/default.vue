@@ -11,7 +11,7 @@ const links = ref([
     <TheNav />
     <div grid="~ cols-[min-content_1fr] gap-8">
       <UVerticalNavigation
-        :links="links" class="justify-center m-l-13 lt-md:m-l-26px lt-md:w-8 "
+        :links="links" class="justify-center ml-10 mr-5 lt-md:m-l-26px lt-md:w-8 "
       />
       <div class="overflow-scroll h-90vh">
         <slot />
