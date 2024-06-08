@@ -35,11 +35,9 @@ onMounted(async () => {
         <h1 class="text-xl font-semibold lg:text-2xl text-center lg:text-start line-clamp-3 lg:line-clamp-2">
           {{ episode.title }}
         </h1>
-        <div>
-          <UButton icon="i-material-symbols-play-circle-outline" variant="outline">
-            play
-          </UButton>
-        </div>
+        <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline">
+          AI Summary
+        </UButton>
       </div>
     </div>
     <div class="mt-2 dont-break-out w-[calc(100vw-3rem)] w-auto">
@@ -56,24 +54,9 @@ onMounted(async () => {
           </template>
         </UTabs>
         <div class="flex justify-center">
-          <div v-if="selectedTab === 'Shownotes'" class="shownotes-content prose prose-ol:leading-none prose-ul:leading-none dark:prose-invert max-w-full" v-html="episode.shownotes " />
+          <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.shownotes-content {
-  max-width: 55%;
-}
-.shownotes-content p {
-  color:#333333;
-  font-weight:normal;
-  font-size:16px;
-  line-height:20px;
-  font-family:Helvetica,Arial,sans-serif;
-  hyphens:auto;
-  text-align:justify;
-}
-</style>
