@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       eid,
       title: data.title,
       description: data.description,
-      shownotes: data.shownotes.replace(/\0/g, ''),
+      shownotes: data.shownotes ? data.shownotes.replace(/\0/g, '') : '',
       datePublished: data.pubDate,
       duration: data.duration,
       mediaUrl: data.enclosure.url,
