@@ -4,13 +4,13 @@ import type { Episode } from '~/types'
 const episode = ref<Episode>({})
 const route = useRoute()
 const selectedTab = ref('Shownotes')
-const items = ref([
-  { label: 'Shownotes', icon: 'i-carbon-bookmark' },
-  { label: 'Summary', icon: 'i-carbon-ai-status' },
-  { label: 'Mindmap', icon: 'i-carbon-partition-repartition' },
-  { label: 'Key Words', icon: 'i-carbon-star-review' },
-  { label: 'Transcript', icon: 'i-carbon-ibm-watson-language-translator' },
-
+const isSummarized = ref(false)
+const items = computed(() => [
+  { label: 'Shownotes', icon: 'i-carbon-bookmark', disabled: false },
+  { label: 'Summary', icon: 'i-carbon-ai-status', disabled: !isSummarized.value },
+  { label: 'Mindmap', icon: 'i-carbon-partition-repartition', disabled: !isSummarized.value },
+  { label: 'Key Words', icon: 'i-carbon-star-review', disabled: !isSummarized.value },
+  { label: 'Transcript', icon: 'i-carbon-ibm-watson-language-translator', disabled: !isSummarized.value },
 ])
 function tabSelected(index: number) {
   const item = items.value[index]
@@ -23,6 +23,9 @@ onMounted(async () => {
     return
   }
   episode.value = data[0]
+  if (episode.value.aiSummary) {
+    isSummarized.value = true
+  }
 })
 </script>
 
@@ -46,15 +49,14 @@ onMounted(async () => {
           <template #default="{ item, selected }">
             <div class="flex items-center gap-2 relative truncate">
               <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
-
               <span class="truncate">{{ item.label }}</span>
-
               <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
             </div>
           </template>
         </UTabs>
         <div class="flex justify-center">
           <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
+          <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.aiSummary" />
         </div>
       </div>
     </div>

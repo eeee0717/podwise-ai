@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { usePodcastStore } from '~/store'
-import type { Podcast } from '~/types'
 
 const supabase = useSupabaseClient()
 const podcastStore = usePodcastStore()

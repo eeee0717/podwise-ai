@@ -19,6 +19,8 @@ export interface Episode {
   shownotes?: string
   mediaUrl?: string
   picUrl?: string
+  transcript?: string
+  aiSummary?: string
 }
 
 export interface appToken {
