@@ -5,6 +5,10 @@ export default defineNuxtConfig({
     accessToken: process.env.X_JIKE_ACCESS_TOKEN,
     deviceId: process.env.X_JIKE_DEVICE_ID,
     refreshToken: process.env.X_JIKE_REFRESH_TOKEN,
+    tencent: {
+      secretId: process.env.TENCENT_SECRET_ID,
+      secretKey: process.env.TENCENT_SECRET_KEY,
+    },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3030',
     },

@@ -16,6 +16,32 @@ function tabSelected(index: number) {
   const item = items.value[index]
   selectedTab.value = item.label
 }
+async function transcriptFn(taskId: number) {
+  taskId = 9307720562
+  const response = await $fetch('/api/checkTranscriptStaus', {
+    method: 'POST',
+    body: JSON.stringify({ taskId }),
+  })
+  console.log(response)
+}
+const { workerFn } = useWebWorkerFn(transcriptFn)
+const taskId = ref<number>(0)
+async function getTranscript() {
+  const response = await $fetch('/api/getTranscript', {
+    method: 'POST',
+    body: JSON.stringify({ mediaUrl: episode.value.mediaUrl }),
+  })
+  if (!response) {
+    return
+  }
+  taskId.value = response
+  console.log(taskId.value)
+}
+async function test() {
+  const result = await workerFn(taskId.value)
+  console.log(result)
+}
+
 onMounted(async () => {
   const supabase = useSupabaseClient()
   const { data } = await supabase.from('episods').select('*').eq('eid', route.params.eid)
@@ -38,8 +64,11 @@ onMounted(async () => {
         <h1 class="text-xl font-semibold lg:text-2xl text-center lg:text-start line-clamp-3 lg:line-clamp-2">
           {{ episode.title }}
         </h1>
-        <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline">
+        <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline" @click="getTranscript">
           AI Summary
+        </UButton>
+        <UButton @click="test">
+          Test
         </UButton>
       </div>
     </div>

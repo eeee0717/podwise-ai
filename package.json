@@ -16,7 +16,8 @@
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "pinia": "^2.1.7",
-    "primevue": "^3.52.0"
+    "primevue": "^3.52.0",
+    "tencentcloud-sdk-nodejs-common": "^4.0.871"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.2.1",
