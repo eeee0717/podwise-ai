@@ -36,6 +36,15 @@ async function getTranscript() {
   // taskId.value = response
   resume()
 }
+async function getAISummary() {
+  const transcript = await optimizeTranscript(episode.value.transcript)
+  const response = await $fetch('/api/getAISummary', {
+    method: 'POST',
+    body: JSON.stringify({ transcript }),
+  })
+  console.log(response)
+}
+
 watchEffect(async () => {
   if (transcriptContent.value.status === 'success') {
     isTranscripted.value = true
@@ -77,7 +86,7 @@ onMounted(async () => {
         <h1 class="text-xl font-semibold lg:text-2xl text-center lg:text-start line-clamp-3 lg:line-clamp-2">
           {{ episode.title }}
         </h1>
-        <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline" @click="getTranscript">
+        <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline" @click="getAISummary">
           AI Summary
         </UButton>
       </div>
