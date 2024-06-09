@@ -1,6 +1,10 @@
 import * as tencentcloud from 'tencentcloud-sdk-nodejs-common'
 
-export default defineEventHandler(async (event) => {
+interface TranscriptStatus {
+  status: string
+  result: string
+}
+export default defineEventHandler(async (event): Promise<TranscriptStatus> => {
   try {
     const { taskId } = await readBody(event)
     const CommonClient = tencentcloud.CommonClient
@@ -29,7 +33,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const { Data } = await client.request('DescribeTaskStatus', params)
-
     return {
       status: Data.StatusStr,
       result: Data.Result,
@@ -39,7 +42,7 @@ export default defineEventHandler(async (event) => {
     console.error('error', err)
     return {
       status: 'error',
-      result: err,
+      result: 'result is empty',
     }
   }
 })

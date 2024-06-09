@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Episode } from '~/types'
 
+const supabase = useSupabaseClient()
 const episode = ref<Episode>({})
 const route = useRoute()
 const selectedTab = ref('Shownotes')
@@ -18,26 +19,33 @@ function tabSelected(index: number) {
   const item = items.value[index]
   selectedTab.value = item.label
 }
-
-const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(taskId.value, transcriptContent), 5000)
+// task test 9309839697
+const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(9309839697, transcriptContent), 5000)
 
 async function getTranscript() {
-  const response = await $fetch('/api/getTranscript', {
-    method: 'POST',
-    body: JSON.stringify({ mediaUrl: episode.value.mediaUrl }),
-  })
-  if (!response) {
-    return
-  }
-  console.log(response)
-  taskId.value = response
+  // const response = await $fetch('/api/getTranscript', {
+  //   method: 'POST',
+  //   body: JSON.stringify({ mediaUrl: episode.value.mediaUrl }),
+  // })
+  // if (!response) {
+  //   return
+  // }
+  // console.log(response)
+  // taskId.value = response
   resume()
 }
-watchEffect(() => {
+watchEffect(async () => {
   if (transcriptContent.value.status === 'success') {
     console.log('pause')
     isSummarized.value = true
     episode.value.transcript = transcriptContent.value.result
+    // eslint-disable-next-line ts/ban-ts-comment
+    // @ts-expect-error
+    const { data: responseData, error } = await supabase.from('episods').update({ transcript: episode.value.transcript }).eq('eid', episode.value.eid).select('*')
+    if (error) {
+      throw new Error(error.message)
+    }
+    console.log(responseData)
     pause()
   }
 })
@@ -82,7 +90,8 @@ onMounted(async () => {
         </UTabs>
         <div class="flex justify-center">
           <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
-          <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.transcript" />
+          <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.aiSummary" />
+          <TranscriptCard v-if="selectedTab === 'Transcript'" :transcript="episode.transcript" />
         </div>
       </div>
     </div>
