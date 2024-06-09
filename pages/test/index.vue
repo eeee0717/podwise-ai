@@ -1,10 +1,18 @@
 <script setup lang="ts">
-function test() {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Page Not Found',
-  })
+const result = ref<{ status?: string, result?: string }>({})
+const taskId = ref<number>(0)
+const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(taskId.value, result), 5000)
+async function test() {
+  taskId.value = 9307720562
+  resume()
 }
+
+watchEffect(() => {
+  if (result.value.status === 'success') {
+    console.log('pause')
+    pause()
+  }
+})
 </script>
 
 <template>
@@ -13,5 +21,8 @@ function test() {
     <UButton @click="test">
       Test
     </UButton>
+  </div>
+  <div>
+    {{ result.result }}
   </div>
 </template>

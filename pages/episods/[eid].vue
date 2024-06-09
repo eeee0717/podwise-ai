@@ -5,6 +5,8 @@ const episode = ref<Episode>({})
 const route = useRoute()
 const selectedTab = ref('Shownotes')
 const isSummarized = ref(false)
+const taskId = ref<number>(0)
+const transcriptContent = ref<{ status?: string, result?: string }>({})
 const items = computed(() => [
   { label: 'Shownotes', icon: 'i-carbon-bookmark', disabled: false },
   { label: 'Summary', icon: 'i-carbon-ai-status', disabled: !isSummarized.value },
@@ -16,16 +18,9 @@ function tabSelected(index: number) {
   const item = items.value[index]
   selectedTab.value = item.label
 }
-async function transcriptFn(taskId: number) {
-  taskId = 9307720562
-  const response = await $fetch('/api/checkTranscriptStaus', {
-    method: 'POST',
-    body: JSON.stringify({ taskId }),
-  })
-  console.log(response)
-}
-const { workerFn } = useWebWorkerFn(transcriptFn)
-const taskId = ref<number>(0)
+
+const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(taskId.value, transcriptContent), 5000)
+
 async function getTranscript() {
   const response = await $fetch('/api/getTranscript', {
     method: 'POST',
@@ -34,13 +29,18 @@ async function getTranscript() {
   if (!response) {
     return
   }
+  console.log(response)
   taskId.value = response
-  console.log(taskId.value)
+  resume()
 }
-async function test() {
-  const result = await workerFn(taskId.value)
-  console.log(result)
-}
+watchEffect(() => {
+  if (transcriptContent.value.status === 'success') {
+    console.log('pause')
+    isSummarized.value = true
+    episode.value.transcript = transcriptContent.value.result
+    pause()
+  }
+})
 
 onMounted(async () => {
   const supabase = useSupabaseClient()
@@ -67,9 +67,6 @@ onMounted(async () => {
         <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline" @click="getTranscript">
           AI Summary
         </UButton>
-        <UButton @click="test">
-          Test
-        </UButton>
       </div>
     </div>
     <div class="mt-2 dont-break-out w-[calc(100vw-3rem)] w-auto">
@@ -85,7 +82,7 @@ onMounted(async () => {
         </UTabs>
         <div class="flex justify-center">
           <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
-          <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.aiSummary" />
+          <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.transcript" />
         </div>
       </div>
     </div>
