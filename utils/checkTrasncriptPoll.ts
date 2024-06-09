@@ -1,5 +1,6 @@
 export async function checkTranscriptPoll(taskId: number, result: Ref<{ status?: string, result?: string }>) {
-  console.log('checkTranscriptPoll', taskId)
+  const toast = useToast()
+  toast.add({ title: `Checking transcript status taskId: ${taskId}`, description: 'Please wait...', timeout: 2000 })
   await new Promise((resolve, reject) => {
     $fetch('/api/checkTranscriptStaus', {
       method: 'POST',

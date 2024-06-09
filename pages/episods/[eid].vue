@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { Episode } from '~/types'
 
+const toast = useToast()
 const supabase = useSupabaseClient()
 const episode = ref<Episode>({})
 const route = useRoute()
 const selectedTab = ref('Shownotes')
 const isSummarized = ref(false)
+const isTranscripted = ref(false)
 const taskId = ref<number>(0)
 const transcriptContent = ref<{ status?: string, result?: string }>({})
 const items = computed(() => [
@@ -13,14 +15,14 @@ const items = computed(() => [
   { label: 'Summary', icon: 'i-carbon-ai-status', disabled: !isSummarized.value },
   { label: 'Mindmap', icon: 'i-carbon-partition-repartition', disabled: !isSummarized.value },
   { label: 'Key Words', icon: 'i-carbon-star-review', disabled: !isSummarized.value },
-  { label: 'Transcript', icon: 'i-carbon-ibm-watson-language-translator', disabled: !isSummarized.value },
+  { label: 'Transcript', icon: 'i-carbon-ibm-watson-language-translator', disabled: !isTranscripted.value },
 ])
 function tabSelected(index: number) {
   const item = items.value[index]
   selectedTab.value = item.label
 }
-// task test 9309839697
-const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(9309839697, transcriptContent), 5000)
+// task test 9313393197
+const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(9313393197, transcriptContent), 5000)
 
 async function getTranscript() {
   // const response = await $fetch('/api/getTranscript', {
@@ -36,8 +38,7 @@ async function getTranscript() {
 }
 watchEffect(async () => {
   if (transcriptContent.value.status === 'success') {
-    console.log('pause')
-    isSummarized.value = true
+    isTranscripted.value = true
     episode.value.transcript = transcriptContent.value.result
     // eslint-disable-next-line ts/ban-ts-comment
     // @ts-expect-error
@@ -46,6 +47,7 @@ watchEffect(async () => {
       throw new Error(error.message)
     }
     console.log(responseData)
+    toast.add({ title: 'Transcript fetched successfully', timeout: 4000 })
     pause()
   }
 })
@@ -59,6 +61,9 @@ onMounted(async () => {
   episode.value = data[0]
   if (episode.value.aiSummary) {
     isSummarized.value = true
+  }
+  if (episode.value.transcript) {
+    isTranscripted.value = true
   }
 })
 </script>
