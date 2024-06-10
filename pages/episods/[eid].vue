@@ -10,6 +10,7 @@ const isSummarized = ref(false)
 const isTranscripted = ref(false)
 const taskId = ref<number>(0)
 const transcriptContent = ref<{ status?: string, result?: string }>({})
+const aiSummaryContent = ref('')
 const items = computed(() => [
   { label: 'Shownotes', icon: 'i-carbon-bookmark', disabled: false },
   { label: 'Summary', icon: 'i-carbon-ai-status', disabled: !isSummarized.value },
@@ -38,11 +39,11 @@ async function getTranscript() {
 }
 async function getAISummary() {
   const transcript = await optimizeTranscript(episode.value.transcript)
-  const response = await $fetch('/api/getAISummary', {
+  const aiSummaryContent = await $fetch('/api/getAISummary', {
     method: 'POST',
     body: JSON.stringify({ transcript }),
   })
-  console.log(response)
+  console.log(aiSummaryContent)
 }
 
 watchEffect(async () => {

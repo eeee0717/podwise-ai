@@ -11,6 +11,13 @@ export default defineNuxtConfig({
     },
     public: {
       baseUrl: process.env.BASE_URL || 'http://localhost:3030',
+      providers: {
+        openai: {
+          apiKey: process.env.PROVIDER_OPENAI_API_KEY,
+          baseUrl: process.env.PROVIDER_OPENAI_BASE_URL,
+        },
+      },
+
     },
   },
   modules: [

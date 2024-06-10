@@ -1,18 +1,13 @@
 <script setup lang="ts">
-const result = ref<{ status?: string, result?: string }>({})
-const taskId = ref<number>(0)
-const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(taskId.value, result), 5000)
+const res = ref('')
 async function test() {
-  taskId.value = 9307720562
-  resume()
+  const response = await $fetch('/api/getAISummary', {
+    method: 'POST',
+    body: JSON.stringify({ transcript: 'Say: This is a test' }),
+  })
+  console.log(response)
+  // res.value = await openai.chat('This is a test')
 }
-
-watchEffect(() => {
-  if (result.value.status === 'success') {
-    console.log('pause')
-    pause()
-  }
-})
 </script>
 
 <template>
@@ -23,6 +18,6 @@ watchEffect(() => {
     </UButton>
   </div>
   <div>
-    {{ result.result }}
+    {{ res }}
   </div>
 </template>
