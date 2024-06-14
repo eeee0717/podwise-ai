@@ -2,14 +2,16 @@ import OpenAI from 'openai'
 import type { IProvider } from './IProvider'
 
 export const openaiProvider: IProvider = {
-  async chat(text: string): Promise<string> {
-    const config = useRuntimeConfig()
-    const openai = new OpenAI({
+  provider: null,
+  init(apiKey, baseUrl): void {
+    this.provider = new OpenAI({
       dangerouslyAllowBrowser: true,
-      apiKey: config.public.providers.openai.apiKey,
-      baseURL: config.public.providers.openai.baseUrl,
+      apiKey,
+      baseURL: baseUrl,
     })
-    const chatCompletion = await openai.chat.completions.create({
+  },
+  async chat(text: string): Promise<string> {
+    const chatCompletion = await this.provider.chat.completions.create({
       messages: [{ role: 'user', content: text }],
       model: 'gpt-3.5-turbo',
     })
