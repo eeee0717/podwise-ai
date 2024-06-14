@@ -16,6 +16,10 @@ export default defineNuxtConfig({
       apiKey: process.env.OPENAI_API_KEY,
       baseUrl: process.env.OPENAI_BASE_URL,
     },
+    doubao: {
+      apiKey: process.env.DOUBAO_API_KEY,
+      baseUrl: process.env.DOUBAO_BASE_URL,
+    },
   },
   modules: [
     '@vueuse/nuxt',

@@ -23,18 +23,18 @@ function tabSelected(index: number) {
   selectedTab.value = item.label
 }
 // task test 9313393197
-const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(9313393197, transcriptContent), 5000)
+const { pause, resume } = useTimeoutPoll(() => checkTranscriptPoll(taskId.value, transcriptContent), 5000)
 
 async function getTranscript() {
-  // const response = await $fetch('/api/getTranscript', {
-  //   method: 'POST',
-  //   body: JSON.stringify({ mediaUrl: episode.value.mediaUrl }),
-  // })
-  // if (!response) {
-  //   return
-  // }
-  // console.log(response)
-  // taskId.value = response
+  const response = await $fetch('/api/getTranscript', {
+    method: 'POST',
+    body: JSON.stringify({ mediaUrl: episode.value.mediaUrl }),
+  })
+  if (!response) {
+    return
+  }
+  console.log(response)
+  taskId.value = response
   resume()
 }
 async function getAISummary() {
