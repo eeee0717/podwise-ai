@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const props = defineProps<{
-  summary?: string
+  mindMap?: string
 }>()
 </script>
 
 <template>
   <div class="w-full flex justify-center">
     <div class="max-w-55% prose prose-ol:leading-none prose-ul:leading-none dark:prose-invert whitespace-pre-line">
-      {{ props.summary }}
+      {{ props.mindMap }}
     </div>
   </div>
 </template>

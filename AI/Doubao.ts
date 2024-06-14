@@ -24,7 +24,7 @@ export const doubaoProvider: IProvider = {
           { role: 'system', content: prompt },
           { role: 'user', content: text },
         ],
-        model: 'ep-20240614092536-r6d7j',
+        model: 'ep-20240614093316-fq8rv',
       }),
     })
     const response = chatCompletion.choices[0].message.content

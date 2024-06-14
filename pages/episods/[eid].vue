@@ -11,6 +11,7 @@ const isTranscripted = ref(false)
 const taskId = ref<number>(0)
 const transcriptContent = ref<{ status?: string, result?: string }>({})
 const aiSummaryContent = ref('')
+const mindMapContent = ref('')
 const items = computed(() => [
   { label: 'Shownotes', icon: 'i-carbon-bookmark', disabled: false },
   { label: 'Summary', icon: 'i-carbon-ai-status', disabled: !isSummarized.value },
@@ -41,11 +42,12 @@ async function getAISummary() {
   toast.add({ title: 'Fetching AI Summary', timeout: 4000 })
   const transcript = await optimizeTranscript(episode.value.transcript)
 
-  const response = await $fetch('/api/getAISummary', {
+  const { summaryResult, mindMapResult } = await $fetch('/api/getAISummary', {
     method: 'POST',
     body: JSON.stringify({ transcript }),
   })
-  aiSummaryContent.value = response
+  aiSummaryContent.value = summaryResult
+  mindMapContent.value = mindMapResult
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-expect-error
   const { data: responseData, error } = await supabase.from('episods').update({ aiSummary: aiSummaryContent }).eq('eid', episode.value.eid).select('*')
@@ -128,6 +130,7 @@ onMounted(async () => {
         <div class="flex justify-center">
           <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
           <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.aiSummary" />
+          <MindMapCard v-if="selectedTab === 'Mindmap'" :mind-map="mindMapContent" />
           <TranscriptCard v-if="selectedTab === 'Transcript'" :transcript="episode.transcript" />
         </div>
       </div>
