@@ -38,14 +38,30 @@ async function getTranscript() {
   resume()
 }
 async function getAISummary() {
+  toast.add({ title: 'Fetching AI Summary', timeout: 4000 })
   const transcript = await optimizeTranscript(episode.value.transcript)
-  // console.log(transcript)
-  const aiSummaryContent = await $fetch('/api/getAISummary', {
+
+  const response = await $fetch('/api/getAISummary', {
     method: 'POST',
     body: JSON.stringify({ transcript }),
   })
-  console.log(aiSummaryContent)
+  aiSummaryContent.value = response
+  // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-expect-error
+  const { data: responseData, error } = await supabase.from('episods').update({ aiSummary: aiSummaryContent }).eq('eid', episode.value.eid).select('*')
+  if (error) {
+    throw new Error(error.message)
+  }
+  console.log(responseData)
 }
+
+watchEffect(() => {
+  if (aiSummaryContent.value === '') {
+    return
+  }
+  isSummarized.value = true
+  episode.value.aiSummary = aiSummaryContent.value
+})
 
 watchEffect(async () => {
   if (transcriptContent.value.status === 'success') {
@@ -82,15 +98,20 @@ onMounted(async () => {
 <template>
   <div>
     <div class="relative flex flex-col items-center gap-y-4  p-6 pb-9 bg-gradient-to-br from-cyan-800/10 to-violet-800/10 dark:from-cyan-950 dark:to-violet-950 lg:flex-row lg:gap-x-6">
-      <img class="bg-white dark:bg-gray-950 object-contain rounded-md w-36 h-36 shadow" :src="episode.picUrl">
+      <img class="bg-white dark:bg-gray-950 object-contain rounded-md w-36 h-36 shadow" :src="episode.picUrl" crossorigin="anonymous">
       <div class="flex flex-col items-center gap-y-2 lg:items-start">
         <TimeModule :date-published="episode.datePublished" :duration="episode.duration" />
         <h1 class="text-xl font-semibold lg:text-2xl text-center lg:text-start line-clamp-3 lg:line-clamp-2">
           {{ episode.title }}
         </h1>
-        <UButton class="m-t-5" size="xl" icon="i-carbon-data-enrichment" variant="outline" @click="getAISummary">
-          AI Summary
-        </UButton>
+        <div grid="~ cols-2 gap-3">
+          <UButton class="m-t-5" size="xl" icon="i-carbon-ibm-watson-language-translator" variant="outline" @click="getTranscript">
+            Transcript
+          </UButton>
+          <UButton class="m-t-5" size="xl" icon="i-carbon-ai-status" variant="outline" :disabled="!isTranscripted" @click="getAISummary">
+            AI Summary
+          </UButton>
+        </div>
       </div>
     </div>
     <div class="mt-2 dont-break-out w-[calc(100vw-3rem)] w-auto">

@@ -10,10 +10,10 @@ export const openaiProvider: IProvider = {
       baseURL: baseUrl,
     })
   },
-  async chat(text: string): Promise<string> {
+  async chat(text: string, prompt: string): Promise<string> {
     const chatCompletion = await this.provider.chat.completions.create({
       messages: [
-        { role: 'system', content: '总结这段文字, 100字左右. ' },
+        { role: 'system', content: prompt },
         { role: 'user', content: text },
       ],
       model: 'gpt-3.5-turbo',
