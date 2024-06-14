@@ -39,6 +39,7 @@ async function getTranscript() {
 }
 async function getAISummary() {
   const transcript = await optimizeTranscript(episode.value.transcript)
+  // console.log(transcript)
   const aiSummaryContent = await $fetch('/api/getAISummary', {
     method: 'POST',
     body: JSON.stringify({ transcript }),
