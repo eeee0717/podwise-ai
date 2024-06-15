@@ -90,6 +90,13 @@ async function test() {
   console.log(response)
   // res.value = await openai.chat('This is a test')
 }
+
+const mindmap = `# 思维导图
+1. 标题1
+ - 子标题1
+ - 子标题2
+3. 标题2
+4. 标题3`
 </script>
 
 <template>
@@ -101,5 +108,9 @@ async function test() {
   </div>
   <div>
     {{ res }}
+  </div>
+  <div>
+    <h1>This is mindmap test</h1>
+    <Mindmap :mindmap="mindmap" />
   </div>
 </template>
