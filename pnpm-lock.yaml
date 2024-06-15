@@ -20,6 +20,9 @@ importers:
       markmap-lib:
         specifier: ^0.17.0
         version: 0.17.0(markmap-common@0.17.0)
+      markmap-toolbar:
+        specifier: ^0.17.0
+        version: 0.17.0(markmap-common@0.17.0)
       markmap-view:
         specifier: ^0.17.0
         version: 0.17.0(markmap-common@0.17.0)
@@ -3849,6 +3852,11 @@ packages:
 
   markmap-lib@0.17.0:
     resolution: {integrity: sha512-YYf/nq+Zr4q6T5E7lVfZGWEUK/0ItDPKwePOiUmuR/k5UUIR8s+UZvLMrFAnu4E1aveM0Tzg9/QPANAWGWmfBw==}
+    peerDependencies:
+      markmap-common: '*'
+
+  markmap-toolbar@0.17.0:
+    resolution: {integrity: sha512-zRkg+pYtjDefJ4lSG0KownAN3eqkJcrTei+HbobBWsWTsc7qdUMn2Ewd97SFHCkGoo1nrG0aW7dzDP6lHWuDkw==}
     peerDependencies:
       markmap-common: '*'
 
@@ -10656,6 +10664,12 @@ snapshots:
       markmap-html-parser: 0.17.0(markmap-common@0.17.0)
       markmap-view: 0.17.0(markmap-common@0.17.0)
       prismjs: 1.29.0
+
+  markmap-toolbar@0.17.0(markmap-common@0.17.0):
+    dependencies:
+      '@babel/runtime': 7.24.6
+      '@gera2ld/jsx-dom': 2.2.2
+      markmap-common: 0.17.0
 
   markmap-view@0.17.0(markmap-common@0.17.0):
     dependencies:

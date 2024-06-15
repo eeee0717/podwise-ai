@@ -1,41 +1,46 @@
 <script setup lang="ts">
-import { Transformer } from 'markmap-lib'
-import { type IMarkmapJSONOptions, Markmap, deriveOptions } from 'markmap-view'
+import { onMounted } from 'vue'
+import { transform } from '~/utils/useMarkmap'
 
 const props = defineProps<{
-  mindmap: string
+  mindmap?: string
 }>()
-const transformer = new Transformer()
-const mm = ref()
-const value = ref('')
-const svgRef = ref()
-const markmapOptions: Partial<IMarkmapJSONOptions> = {
-  initialExpandLevel: 3,
-}
-function update() {
-  const { root } = transformer.transform(value.value)
-  mm.value.setData(root)
-  mm.value.fit()
+
+function exportSVG() {
+  const svg = document.querySelector('#markmap')
+  if (svg) {
+    const serializer = new XMLSerializer()
+    const source = serializer.serializeToString(svg)
+
+    const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'mindmap.svg'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
 }
 
-watch(() => value.value, () => {
-  // 监听输入变化更新思维导图
-  update()
-})
-onMounted(() => {
-  // 初始化markmap思维导图
-  mm.value = Markmap.create(svgRef.value, deriveOptions(markmapOptions))
-  value.value = props.mindmap
-  // 更新思维导图渲染
-  update()
+onMounted(async () => {
+  if (!props.mindmap) {
+    return
+  }
+  transform('#markmap', props.mindmap, {
+    initialExpandLevel: 3,
+    maxWidth: 300,
+  })
 })
 </script>
 
 <template>
-  <div class="w-full h-full" grid="~ rows-[min-content_1fr]">
+  <div class="w-full h-95%">
     <div>
-      this is button
+      <UButton class="relative top-5 left-5" size="md" color="white" icon="i-carbon-download" variant="outline" @click="exportSVG" />
     </div>
-    <svg ref="svgRef" class="w-full h-full dark:text-light" border="~ b-1 b-coolgray" />
+    <svg id="markmap" class="w-full h-full dark:text-light" />
   </div>
 </template>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const props = defineProps<{
-  mindMap: string
+  mindmap?: string
 }>()
 </script>
 
 <template>
   <div class="  w-full h-screen flex justify-center">
-    <div class="w-70%">
-      <Mindmap :mindmap="props.mindMap" />
+    <div class="w-60% b b-1 b-gray">
+      <Mindmap :mindmap="props.mindmap" />
     </div>
   </div>
 </template>

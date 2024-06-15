@@ -127,7 +127,7 @@ onMounted(async () => {
         <div class="flex justify-center">
           <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
           <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.aiSummary" />
-          <MindMapCard v-if="selectedTab === 'Mindmap'" :mind-map="episode.mindmap" />
+          <MindMapCard v-if="selectedTab === 'Mindmap'" :mindmap="episode.mindmap" />
           <TranscriptCard v-if="selectedTab === 'Transcript'" :transcript="episode.transcript" />
         </div>
       </div>
