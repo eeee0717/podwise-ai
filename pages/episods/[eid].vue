@@ -10,8 +10,6 @@ const isSummarized = ref(false)
 const isTranscripted = ref(false)
 const taskId = ref<number>(0)
 const transcriptContent = ref<{ status?: string, result?: string }>({})
-const aiSummaryContent = ref('')
-const mindMapContent = ref('')
 const items = computed(() => [
   { label: 'Shownotes', icon: 'i-carbon-bookmark', disabled: false },
   { label: 'Summary', icon: 'i-carbon-ai-status', disabled: !isSummarized.value },
@@ -46,11 +44,11 @@ async function getAISummary() {
     method: 'POST',
     body: JSON.stringify({ transcript }),
   })
-  aiSummaryContent.value = summaryResult
-  mindMapContent.value = mindMapResult
+  episode.value.aiSummary = summaryResult
+  episode.value.mindmap = mindMapResult
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-expect-error
-  const { data: responseData, error } = await supabase.from('episods').update({ aiSummary: aiSummaryContent }).eq('eid', episode.value.eid).select('*')
+  const { data: responseData, error } = await supabase.from('episods').update({ aiSummary: summaryResult, mindmap: mindMapResult }).eq('eid', episode.value.eid).select('*')
   if (error) {
     throw new Error(error.message)
   }
@@ -58,11 +56,10 @@ async function getAISummary() {
 }
 
 watchEffect(() => {
-  if (aiSummaryContent.value === '') {
+  if (episode.value.aiSummary === '') {
     return
   }
   isSummarized.value = true
-  episode.value.aiSummary = aiSummaryContent.value
 })
 
 watchEffect(async () => {
@@ -130,7 +127,7 @@ onMounted(async () => {
         <div class="flex justify-center">
           <ShownotesCard v-if="selectedTab === 'Shownotes'" :shownotes="episode.shownotes" />
           <SummaryCard v-if="selectedTab === 'Summary'" :summary="episode.aiSummary" />
-          <MindMapCard v-if="selectedTab === 'Mindmap'" :mind-map="mindMapContent" />
+          <MindMapCard v-if="selectedTab === 'Mindmap'" :mind-map="episode.mindmap" />
           <TranscriptCard v-if="selectedTab === 'Transcript'" :transcript="episode.transcript" />
         </div>
       </div>

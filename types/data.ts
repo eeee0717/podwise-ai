@@ -21,6 +21,7 @@ export interface Episode {
   picUrl?: string
   transcript?: string
   aiSummary?: string
+  mindmap?: string
 }
 
 export interface appToken {
