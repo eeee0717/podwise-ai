@@ -1,15 +1,18 @@
 import OpenAI from 'openai'
-import type { IProvider } from './IProvider'
+import type { ISDKProvider } from './IProvider'
 
-export const openaiProvider: IProvider = {
-  provider: null,
-  init(apiKey, baseUrl): void {
+export class OpenAIProvider implements ISDKProvider {
+  provider: OpenAI
+
+  constructor(apiKey: string, baseUrl: string) {
+    console.warn('OpenAIProvider', apiKey, baseUrl)
     this.provider = new OpenAI({
       dangerouslyAllowBrowser: true,
       apiKey,
       baseURL: baseUrl,
     })
-  },
+  }
+
   async chat(text: string, prompt: string): Promise<string> {
     const chatCompletion = await this.provider.chat.completions.create({
       messages: [
@@ -21,6 +24,6 @@ export const openaiProvider: IProvider = {
     const response = chatCompletion.choices[0].message.content
     if (!response)
       throw new Error('No response from OpenAI')
-    return Promise.resolve(response)
-  },
+    return response
+  }
 }

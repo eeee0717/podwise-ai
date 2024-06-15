@@ -1,6 +1,6 @@
-import { doubaoProvider } from '~/AI/Doubao'
+import { DoubaoProvider } from '~/AI/Doubao'
 import type { IProvider } from '~/AI/IProvider'
-import { openaiProvider } from '~/AI/Openai'
+import { OpenAIProvider } from '~/AI/Openai'
 import splitToChunks from '~/utils/splitToChunks'
 
 const segPrompt = '使用简短的话提取这段文字的重点.'
@@ -29,8 +29,8 @@ async function summary(provider: IProvider, text: string, prompt: string) {
 }
 
 async function getProvider(apiKey: string, baseUrl: string) {
-  // openaiProvider.init(apiKey, baseUrl)
+  // const openaiProvider = new OpenAIProvider(apiKey, baseUrl)
   // return openaiProvider
-  doubaoProvider.init(apiKey, baseUrl)
+  const doubaoProvider = new DoubaoProvider(apiKey, baseUrl)
   return doubaoProvider
 }
