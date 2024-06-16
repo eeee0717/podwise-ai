@@ -26,21 +26,8 @@ const filteredEpisods = computed(() => {
     return []
   }
   // 克隆 episods，以避免改变原数组
-  const sortedEpisods: Episode[] = podcast.value.episods
-
-  // 根据 filterselected 的值进行排序
-  if (filterSelected.value === 'old') {
-    sortedEpisods.sort((a: Episode, b: Episode) => (a.datePublished && b.datePublished) ? (new Date(a.datePublished).getTime() - new Date(b.datePublished).getTime()) : 0)
-  }
-  else if (filterSelected.value === 'new') {
-    sortedEpisods.sort((a: Episode, b: Episode) => (a.datePublished && b.datePublished) ? (new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()) : 0)
-  }
-  else if (filterSelected.value === 'short') {
-    sortedEpisods.sort((a: Episode, b: Episode) => (a.duration && b.duration) ? (a.duration - b.duration) : 0)
-  }
-  else if (filterSelected.value === 'long') {
-    sortedEpisods.sort((a: Episode, b: Episode) => (a.duration && b.duration) ? (b.duration - a.duration) : 0)
-  }
+  let sortedEpisods: Episode[] = podcast.value.episods
+  sortedEpisods = sortEpisods(filterSelected.value, sortedEpisods)
   return sortedEpisods
 })
 const pageEpisods = computed(() => {

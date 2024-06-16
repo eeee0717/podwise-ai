@@ -45,10 +45,16 @@ async function getAISummary() {
     body: JSON.stringify({ transcript }),
   })
   episode.value.aiSummary = summaryResult
-  episode.value.mindmap = mindMapResult
+  episode.value.mindmap = `---
+title: ${episode.value.title}
+---
+
+${mindMapResult}
+  `
+  console.log(episode.value)
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-expect-error
-  const { data: responseData, error } = await supabase.from('episods').update({ aiSummary: summaryResult, mindmap: mindMapResult }).eq('eid', episode.value.eid).select('*')
+  const { data: responseData, error } = await supabase.from('episods').update({ aiSummary: episode.value.aiSummary, mindmap: episode.value.mindmap }).eq('eid', episode.value.eid).select('*')
   if (error) {
     throw new Error(error.message)
   }

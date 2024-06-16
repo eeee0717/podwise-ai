@@ -30,7 +30,7 @@ onMounted(async () => {
     return
   }
   transform('#markmap', props.mindmap, {
-    initialExpandLevel: 3,
+    initialExpandLevel: 2,
     maxWidth: 300,
   })
 })

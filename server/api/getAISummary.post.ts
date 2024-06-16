@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   // console.warn('responses', responses)
 
   const summaryResult = await summary(provider, responses, summaryPrompt)
-  const mindMapResult = (await Promise.all(chunks.map(chunk => summary(provider, chunk, mindmapPrompt)))).join('')
+  const mindMapResult = (await Promise.all(chunks.map(chunk => summary(provider, chunk, mindmapPrompt)))).join('\n')
   return { summaryResult, mindMapResult }
 })
 
